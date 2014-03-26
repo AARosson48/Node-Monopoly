@@ -5,7 +5,15 @@
 a {
   color: #00B7FF;
 }
-.game-area {
+#gameBoard {
+  height: 90vw;
+  width: 90vw;
+  display: -webkit-flex;
+  display: flex;
+  flex-flow: row wrap;
+  justify-content: space-between;
+}
+#gameBoard > .game-area {
   width: 15%;
   height: 7.77776%;
   display: -webkit-flex;
@@ -16,27 +24,19 @@ a {
   align-items: flex-start;
   border: 1px inset gray;
 }
-.game-area:nth-child(-n+11),
-.game-area:nth-child(n+31) {
+#gameBoard > .game-area:nth-child(-n+11),
+#gameBoard > .game-area:nth-child(n+31) {
   height: 15%;
   width: 7.77776%;
 }
-.game-area:nth-child(n+12):nth-child(odd):nth-child(-n+30) {
+#gameBoard > .game-area:nth-child(n+12):nth-child(odd):nth-child(-n+30) {
   margin-left: 56%;
 }
-.game-area:nth-child(1),
-.game-area:nth-child(11),
-.game-area:nth-child(30),
-.game-area:nth-child(40) {
+#gameBoard > .game-area:nth-child(1),
+#gameBoard > .game-area:nth-child(11),
+#gameBoard > .game-area:nth-child(30),
+#gameBoard > .game-area:nth-child(40) {
   width: 15%;
   height: 15%;
-}
-#gameBoard {
-  height: 90vw;
-  width: 90vw;
-  display: -webkit-flex;
-  display: flex;
-  flex-flow: row wrap;
-  justify-content: space-between;
 }
 /*# sourceMappingURL=style.css.map */

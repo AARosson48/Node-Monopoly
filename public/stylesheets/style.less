@@ -7,35 +7,6 @@ a {
     color: #00B7FF;
 }
 
-.game-area {
-    width: 15%;
-    height: 7.77776%;
-    display: -webkit-flex;
-    display: flex;
-    -webkit-flex-direction: column;
-    flex-direction: column;
-    -webkit-align-items: flex-start;
-    align-items: flex-start;
-    border: 1px inset gray;
-
-    
-
-    &:nth-child(-n+11), &:nth-child(n+31) {
-        height: 15%;
-        width: 7.77776%;
-    }
-
-    &:nth-child(n+12):nth-child(odd):nth-child(-n+30) {
-        margin-left:56%;
-    }
-
-    &:nth-child(1), &:nth-child(11), &:nth-child(30), &:nth-child(40) {
-        width: 15%;
-        height: 15%;
-    }
-
-}
-
 #gameBoard {
     height: 90vw;
     width: 90vw;
@@ -43,6 +14,30 @@ a {
     display: flex;
     flex-flow: row wrap;
     justify-content: space-between;
+
+    & > .game-area {
+        width: 15%;
+        height: 7.77776%;
+        display: -webkit-flex;
+        display: flex;
+        -webkit-flex-direction: column;
+        flex-direction: column;
+        -webkit-align-items: flex-start;
+        align-items: flex-start;
+        border: 1px inset gray;
+
+        &:nth-child(-n+11), &:nth-child(n+31) {
+            height: 15%;
+            width: 7.77776%;
+        }
+
+        &:nth-child(n+12):nth-child(odd):nth-child(-n+30) {
+            margin-left: 56%;
+        }
+
+        &:nth-child(1), &:nth-child(11), &:nth-child(30), &:nth-child(40) {
+            width: 15%;
+            height: 15%;
+        }
+    }
 }
-
-
