@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>{{ title }}</title>
+    <link rel='stylesheet' href='/stylesheets/style.css' />
+    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css">
+</head>
+<body>
+    <h1>{{ title }}</h1>
+    <p>Welcome to {{ title }}</p>
+    <div class="btn btn-default">click me</div>
+    {{#users}}
+        <div>name: {{name}}</div>
+        <div>color: {{color}}</div>
+        <div>id:  {{_id}}</div>
+    {{/users}}
+    <script src="//netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
+</body>
+</html>

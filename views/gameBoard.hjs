@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>{{ title }}</title>
+    <link rel='stylesheet' href='/stylesheets/style.css' />
+    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css">
+</head>
+<body>
+    <div id="gameBoard">
+        <img src="/images/board.png" />
+        </div>
+        <!--{{#gameAreas}}
+        <div class="game-area">
+            <div>{{name}}</div>
+            <div>${{value}}</div>
+        </div>
+        {{/gameAreas}}-->
+
+
+    <script src="//netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
+</body>
+</html>
