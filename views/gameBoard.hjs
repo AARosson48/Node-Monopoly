@@ -7,16 +7,13 @@
 </head>
 <body>
     <div id="gameBoard">
-        <img src="/images/board.png" />
-        </div>
-        <!--{{#gameAreas}}
+        {{#gameAreas}}
         <div class="game-area">
-            <div>{{name}}</div>
+            <div style="background:{{color}}">{{name}}</div>
             <div>${{value}}</div>
         </div>
-        {{/gameAreas}}-->
-
-
+        {{/gameAreas}}
+    </div>
     <script src="//netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
 </body>
 </html>

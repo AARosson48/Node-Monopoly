@@ -8,58 +8,41 @@ a {
 }
 
 .game-area {
-    display: inline-block;
-    height: 300px;
-    background: lightgray;
-    width: 7.77777777%;
+    width: 15%;
+    height: 7.77776%;
+    display: -webkit-flex;
+    display: flex;
+    -webkit-flex-direction: column;
+    flex-direction: column;
+    -webkit-align-items: flex-start;
+    align-items: flex-start;
+    border: 1px inset gray;
 
+    
 
-    &:nth-child(1), &:nth-child(11), &:nth-child(40) {
-        width: 15%;
+    &:nth-child(-n+11), &:nth-child(n+31) {
+        height: 15%;
+        width: 7.77776%;
     }
+
+    &:nth-child(n+12):nth-child(odd):nth-child(-n+30) {
+        margin-left:56%;
+    }
+
+    &:nth-child(1), &:nth-child(11), &:nth-child(30), &:nth-child(40) {
+        width: 15%;
+        height: 15%;
+    }
+
 }
 
 #gameBoard {
-    font-size: 0;
     height: 90vw;
     width: 90vw;
+    display: -webkit-flex;
+    display: flex;
+    flex-flow: row wrap;
+    justify-content: space-between;
 }
 
-.top-bottom {
-    height: 15%;
 
-    & > * {
-        font-size: initial;
-    }
-
-    & > div {
-        width: 7.7776%;
-        height:100%;
-        border: 1px inset gray;
-        display:inline-block;
-
-        &:first-child, &:last-child {
-            width: 15%;
-        }
-    }
-}
-
-.middle {
-    height: 7.7776%;
-
-    & > * {
-        font-size: initial;
-    }
-
-    & > div {
-        width: 15%;
-        height:100%;
-        border: 1px inset gray;
-        display:inline-block;
-
-        &.spacer {
-            width: 70%;
-            border:none;
-        }
-    }
-}

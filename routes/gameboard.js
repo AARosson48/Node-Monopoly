@@ -20,17 +20,14 @@ var gameboardModel = require("../models/gameboardModel");
 app.get('/gameboard', function(req, res) {
     GameArea.find(function(err, data) {
 		if (err) return console.log("failed to get game areas");
-        
-        var thing = data;
+
         data.sort(function(a, b) { 
             return a.boardLocation - b.boardLocation; 
         });
 
-        firstGroup = data.slice(0,11);
-
   	    res.render('gameBoard', { 
   		    title: 'Game Board',
-  		    gameAreas: firstGroup,
+  		    gameAreas: data,
   	    });
 	}); 
 });
