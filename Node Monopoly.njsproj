@@ -38,7 +38,6 @@
     <Compile Include="routes\gameboard.js" />
     <Compile Include="routes\index.js" />
     <Content Include="package.json" />
-    <Content Include="public\images\board.png" />
     <Content Include="public\stylesheets\style.styl" />
   </ItemGroup>
   <ItemGroup>
