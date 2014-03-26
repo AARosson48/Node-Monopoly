@@ -9,8 +9,14 @@
     <div id="gameBoard">
         {{#gameAreas}}
         <div class="game-area">
-            <div style="background:{{color}}">{{name}}</div>
-            <div>${{value}}</div>
+            {{#color}}
+            <div class="color-rect" style="background-color:{{color}}"></div>
+            {{/color}}
+            
+            <div class="area-name">{{name}}</div>
+            {{#value}}
+            <div class="area-value">${{value}}</div>
+            {{/value}}
         </div>
         {{/gameAreas}}
     </div>
