@@ -29,6 +29,7 @@
     <DebugSymbols>true</DebugSymbols>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="public\javascripts\scripts.js" />
     <Compile Include="turnMechanics.js" />
     <Compile Include="db.js" />
     <Compile Include="app.js" />

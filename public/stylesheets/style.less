@@ -1,5 +1,6 @@
 body {
-    font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
+    //font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
+    font-family: 'Yanone Kaffeesatz', sans-serif;
     padding: 5%;
 }
 
@@ -13,6 +14,8 @@ a {
     display: flex;
     flex-flow: row wrap;
     justify-content: space-between;
+    border: 6px solid #7485FF;
+    border-radius: 1%;
 
     & > .game-area {
         width: 15%;
@@ -21,10 +24,21 @@ a {
         flex-direction: column;
         justify-content: space-between;
         align-items: stretch;
-        border: 1px solid black;
+        border: solid black;
+        border-width: 2px 1px;
         text-align: center;
         font-weight: bold;
-        overflow:hidden;
+        overflow: hidden;
+
+        &:hover {
+            background: #ccc;
+            cursor: pointer;
+            box-shadow: inset 0 0 10px #999;
+        }
+
+        &:active {
+            background: #C2C2C2;
+        }
 
         &:nth-child(-n+11) {
             flex-direction: column-reverse;
@@ -32,34 +46,38 @@ a {
 
         &:nth-child(n+12):nth-child(odd):nth-child(-n+29) {
             flex-direction: row;
+            border-width: 1px 2px;
 
             & > .color-rect {
                 width: 15%;
                 height: 100%;
             }
 
-            & > .area-name, & > .area-value {
+            & > .area-name, & > .area-value, & > .area-image {
                 display: flex;
                 justify-content: center;
                 align-items: center;
-                -webkit-transform: rotate(270deg);
+                -moz-transform: rotate(270deg);
+                -webkit-transform: rotate(270deg); //.1 is for poor webkit antialiasing
                 max-width: 53%;
             }
         }
 
         &:nth-child(n+12):nth-child(even):nth-child(-n+29) {
             flex-direction: row-reverse;
+            border-width: 1px 2px;
 
             & > .color-rect {
                 width: 15%;
                 height: 100%;
             }
 
-            & > .area-name, & > .area-value {
+            & > .area-name, & > .area-value, & > .area-image {
                 display: flex;
                 justify-content: center;
                 align-items: center;
-                -webkit-transform: rotate(90deg);
+                -moz-transform: rotate(90deg);
+                -webkit-transform: rotate(90deg); //.1 is for poor webkit antialiasing
                 max-width: 53%;
             }
         }
@@ -80,7 +98,7 @@ a {
         }
 
         & > .color-rect {
-            border: 1px solid black;
+            outline: 2px solid black;
             width: 100%;
             height: 15%;
         }
@@ -88,9 +106,16 @@ a {
         & > .area-name {
             padding: 10% 2%;
             word-wrap: break-word;
+            font-size: 1.5vw;
+            line-height: 1;
         }
 
         & > .area-value {
+            font-size: 2vw;
+        }
+
+        & > .area-image {
+            max-width: none;
         }
     }
 }

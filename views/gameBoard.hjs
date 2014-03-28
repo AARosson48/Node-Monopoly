@@ -2,8 +2,9 @@
 <html>
 <head>
     <title>{{ title }}</title>
-    <link rel='stylesheet' href='/stylesheets/style.css' />
     <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css">
+    <link href='http://fonts.googleapis.com/css?family=Yanone+Kaffeesatz:700' rel='stylesheet' type='text/css'>
+    <link rel='stylesheet' href='/stylesheets/style.css' />
 </head>
 <body>
     <div id="gameBoard">
@@ -14,14 +15,21 @@
             {{/color}}
 
             <div class="area-name">{{name}}</div>
+            
+            {{#image}}
+            <img class="area-image" src="/images/{{image}}.png" />
+            {{/image}}
+
             {{#value}}
             <div class="area-value">${{value}}</div>
             {{/value}}
+
+            
         </div>
         {{/gameAreas}}
     </div>
     <script src="http://ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js"></script>
     <script src="//netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
-    <script src="//cdnjs.cloudflare.com/ajax/libs/FitText.js/1.1/jquery.fittext.min.js"></script>
+    <script src="/javascripts/scripts.js"></script>
 </body>
 </html>
