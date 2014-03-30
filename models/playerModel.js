@@ -1,6 +1,7 @@
 ﻿this.Player = mongoose.model('Player', {
     name: String,
     currentGameArea: Number,
+    inJail: Boolean,
     money: Number
 });
 
