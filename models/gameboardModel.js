@@ -1,4 +1,4 @@
-﻿GameArea = mongoose.model('GameArea', {
+﻿this.GameArea = mongoose.model('GameArea', {
     name: String,
     value: Number,
     index: Number,

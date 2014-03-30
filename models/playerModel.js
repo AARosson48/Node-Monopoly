@@ -1,6 +1,6 @@
-﻿Player = mongoose.model('Player', {
+﻿this.Player = mongoose.model('Player', {
     name: String,
-    currentPlace: Number,
+    currentGameArea: Number,
     money: Number
 });
 

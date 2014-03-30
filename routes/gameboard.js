@@ -1,6 +1,8 @@
 ﻿var app = require("../app");
 var db = require("../db");
 var gameboardModel = require("../models/gameboardModel");
+var playerModel = require("../models/playerModel");
+var turnMechanics = require("./../turnMechanics");
 
 //app.get('/newarea', function(req, res) {
 //     var gameArea = new GameArea({
@@ -18,16 +20,33 @@ var gameboardModel = require("../models/gameboardModel");
 //});
 
 app.get('/gameboard', function(req, res) {
-    GameArea.find(function(err, data) {
+    var gameboardMutexCounter = 2,
+        gameArea,
+        players;
+    var gameboardMutexDecrement = function() {
+        if (--gameboardMutexCounter == 0) {
+            res.render('gameBoard', { 
+  		        title: 'Game Board',
+  		        gameAreas: gameArea,
+                players: players
+  	        });
+        }
+    };
+
+    playerModel.Player.find(function(err, data) {
+        if (err) return console.log("failed to get players");
+        players = data;
+        gameboardMutexDecrement();
+    });
+
+   gameboardModel.GameArea.find(function(err, data) {
 		if (err) return console.log("failed to get game areas");
 
         data.sort(function(a, b) { 
             return a.boardLocation - b.boardLocation; 
         });
 
-  	    res.render('gameBoard', { 
-  		    title: 'Game Board',
-  		    gameAreas: data,
-  	    });
+        gameArea = data;
+        gameboardMutexDecrement();
 	}); 
 });
