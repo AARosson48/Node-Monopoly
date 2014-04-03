@@ -3,18 +3,17 @@ var gameboardModels = require("../models/gameboardModel");
 var playerModels = require("../models/playerModel");
 var turnMechanics = require("./../turnMechanics");
 
-app.get('/', function(req, res) {
-    var gameboardMutexCounter = 2,
-        gameArea,
-        players;
-    var gameboardMutexDecrement = function() {
-        if (--gameboardMutexCounter == 0) {
+var gameboard;
 
+app.get('/', function(req, res) {
+    var players;
+    var gameboardMutexDecrement = function() {
+        if (players && gameboard) {
             turnMechanics.resetGame();
             turnMechanics.takeTurnStep(function() {
                 res.render('gameBoard', { 
   		            title: 'Game Board',
-  		            gameAreas: gameArea,
+  		            gameAreas: gameboard,
                     players: players
   	            });
             });
@@ -27,16 +26,18 @@ app.get('/', function(req, res) {
         gameboardMutexDecrement();
     });
 
-   gameboardModels.GameArea.find(function(err, data) {
-		if (err) return console.log("failed to get game areas");
+    if (!gameboard) {
+        gameboardModels.GameArea.find(function(err, data) {
+		    if (err) return console.log("failed to get game areas");
 
-        data.sort(function(a, b) { 
-            return a.boardLocation - b.boardLocation; 
-        });
+            data.sort(function(a, b) { 
+                return a.boardLocation - b.boardLocation; 
+            });
 
-        gameArea = data;
-        gameboardMutexDecrement();
-	}); 
+            gameboard = data;
+            gameboardMutexDecrement();
+	    }); 
+     }
 });
 
 
