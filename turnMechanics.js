@@ -84,7 +84,7 @@ this.applyGameArea = function (player, gamearea, callback) {
             percentage: 1
         });
         player.save(function(err) {
-	 	    if (err) console.log("error in saving the user");
+	 	    if (err) console.log("error in saving the player");
             console.log("player ", player.name, " bought ", gamearea.name);
             callback();
   	    });

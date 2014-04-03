@@ -10,14 +10,46 @@ app.get('/', function(req, res) {
     var gameboardMutexDecrement = function() {
         if (players && gameboard) {
             turnMechanics.resetGame(function() {
-                turnMechanics.takeTurnStep(function() {
-                    res.render('gameBoard', { 
-  		                title: 'Node Monopoly',
-  		                gameAreas: gameboard,
-                        players: players
-  	                });
-                });
+                res.render('gameBoard', { 
+  		            title: 'Node Monopoly',
+  		            gameAreas: gameboard,
+                    players: players
+  	            });
             });            
+        }
+    };
+
+    playerModels.Player.find(function(err, data) {
+        if (err) return console.log("failed to get players");
+        players = data;
+        gameboardMutexDecrement();
+    });
+
+    if (!gameboard) {
+        gameboardModels.GameArea.find(function(err, data) {
+		    if (err) return console.log("failed to get game areas");
+
+            data.sort(function(a, b) { 
+                return a.boardLocation - b.boardLocation; 
+            });
+
+            gameboard = data;
+            gameboardMutexDecrement();
+	    }); 
+     }
+});
+
+app.get('/taketurn', function(req, res) {
+    var players;
+    var gameboardMutexDecrement = function() {
+        if (players && gameboard) {
+            turnMechanics.takeTurnStep(function() {
+                res.render('gameBoard', { 
+  		            title: 'Node Monopoly',
+  		            gameAreas: gameboard,
+                    players: players
+  	            });
+            });           
         }
     };
 
