@@ -9,14 +9,15 @@ app.get('/', function(req, res) {
     var players;
     var gameboardMutexDecrement = function() {
         if (players && gameboard) {
-            turnMechanics.resetGame();
-            turnMechanics.takeTurnStep(function() {
-                res.render('gameBoard', { 
-  		            title: 'Game Board',
-  		            gameAreas: gameboard,
-                    players: players
-  	            });
-            });
+            turnMechanics.resetGame(function() {
+                turnMechanics.takeTurnStep(function() {
+                    res.render('gameBoard', { 
+  		                title: 'Node Monopoly',
+  		                gameAreas: gameboard,
+                        players: players
+  	                });
+                });
+            });            
         }
     };
 

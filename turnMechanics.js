@@ -4,13 +4,14 @@ var gameboardModel = require('./models/gameboardModel.js');
 var turnMechanics = this;
 
 //reset the game, put all players back to $1500 on 0 area
-this.resetGame = function() {
+this.resetGame = function(callback) {
     var resetCondition = {},  //no conditions, we want them all
-        resetUpdate = { $set: { currentGameArea: 0, money: 1500 } },
+        resetUpdate = { $set: { currentGameArea: 0, money: 1500, properties: [] } },
         resetOptions = { multi: true };
 
     playerModels.Player.update(resetCondition, resetUpdate, resetOptions, function(err, numAffected) {
         if (err) return console.log("failed to reset game");
+        callback();
     });
 }
 
@@ -38,18 +39,21 @@ this.takeTurn = function(player, numDoubles) {
     var dice = turnMechanics.rollDice();
 
     player.currentGameArea = (player.currentGameArea + dice.value) % 40;
-    gameboardModel.GameArea.findOne({ 'index': player.currentGameArea }, function(err, data) {
+    gameboardModel.GameArea.findOne({ 'index': player.currentGameArea }, function(err, gameArea) {
         if (err) console.log("error in saving the player");
 
-        console.log("player ", player.name , " landed on game area ", data.name);
+        console.log("player ", player.name , " landed on game area ", gameArea.name);
 
-        //evaluate the actual turn -- applyGameArea
+        turnMechanics.applyGameArea(player, gameArea, function() {
+            console.log("we turn a turn, bitch");
+        });
     });
 
     player.save(function(err) {
 	    if (err) console.log("error in saving the player"); 
         
         if (dice.isDouble) {
+            console.log("player ", player.name, " rolled doubles!");
             turnMechanics.takeTurn(player, numDoubles + 1);
         }       
 	});
@@ -71,5 +75,21 @@ this.goToJail = function(player) {
     return player;
 }
 
-this.applyGameArea = function (player, gamearea) {
+this.applyGameArea = function (player, gamearea, callback) {
+    //if it's a property and the player can afford it, auto buy it for now
+    if (gamearea.value && player.money >= gamearea.value) {
+        player.money -= gamearea.value;
+        player.properties.push({
+            id: gamearea.id,
+            percentage: 1
+        });
+        player.save(function(err) {
+	 	    if (err) console.log("error in saving the user");
+            console.log("player ", player.name, " bought ", gamearea.name);
+            callback();
+  	    });
+    } else {
+        console.log("player ", player.name, " did not land on a property");
+        callback();  //this is only temp
+    }
 }
