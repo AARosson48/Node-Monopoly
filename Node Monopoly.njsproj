@@ -35,8 +35,6 @@
     <Compile Include="app.js" />
     <Compile Include="models\playerModel.js" />
     <Compile Include="models\gameboardModel.js" />
-    <Compile Include="routes\game.js" />
-    <Compile Include="routes\gameboard.js" />
     <Compile Include="routes\index.js" />
     <Content Include="package.json" />
     <Content Include="public\stylesheets\style.styl" />

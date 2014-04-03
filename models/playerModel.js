@@ -1,4 +1,6 @@
-﻿this.Player = mongoose.model('Player', {
+﻿var db = require('./../db.js');
+
+this.Player = db.mongoose.model('Player', {
     name: String,
     currentGameArea: Number,
     inJail: Boolean,

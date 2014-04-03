@@ -29,10 +29,10 @@ if ('development' == app.get('env')) {
 
 //init all routes
 var routes = require('./routes');
-var gameboard = require('./routes/gameboard');
-var game = require("./routes/game");
+//var gameboard = require('./routes/gameboard');
+//var game = require("./routes/game");
 
-var turnMechanics = require('./turnMechanics.js');
+//var turnMechanics = require('./turnMechanics.js');
 
 
 http.createServer(app).listen(app.get('port'), function(){

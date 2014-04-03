@@ -1,2 +1,2 @@
-mongoose = require('mongoose');
-mongoose.connect("mongodb://localhost/MongoTest")
+this.mongoose = require('mongoose');
+this.mongoose.connect("mongodb://localhost/MongoTest")
