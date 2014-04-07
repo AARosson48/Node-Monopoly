@@ -9,7 +9,7 @@
 <body>
     <div id="gameBoard">
         {{#gameAreas}}
-        <div class="game-area">
+        <div class="game-area" data-index="{{index}}">
             {{#color}}
             <div class="color-rect" style="background-color:{{color}}"></div>
             {{/color}}
@@ -24,10 +24,14 @@
             <div class="area-value">${{value}}</div>
             {{/value}}
 
+            {{#players}}
+                <div class="player">{{name}}:{{money}}</div>
+            {{/players}}
+
         </div>
         {{/gameAreas}}
     </div>
-    <div>Players:</div>
+<!--     <div>Players:</div>
     <ul>
     {{#players}}
         <li>Player {{name}} is currently on area: {{currentGameArea}} and owns 
@@ -36,7 +40,7 @@
             {{/properties}}
         </li>
     {{/players}}
-    </ul>
+    </ul> -->
     <div class="btn btn-default" onclick="takeTurn();">Take Turn</div>
     <script src="http://ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js"></script>
     <script src="//netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>

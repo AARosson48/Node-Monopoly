@@ -5,7 +5,11 @@ $(window).resize(function() {
 });
 
 takeTurn = function() {
-    $.post('/taketurn', {}, function() {
+    $.get('/taketurn', {}, function(data) {
         //do something... repaint, i guess
+        $("#gameBoard").find(".player").remove();
+        data.forEach(function(elem) {
+            $(".game-area[data-index=" + elem.currentGameArea +"]").append("<div>"+ elem.name + ":" + elem.money + "</div>");
+        });
     });
 }

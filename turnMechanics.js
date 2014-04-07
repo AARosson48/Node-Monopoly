@@ -19,11 +19,10 @@ this.takeTurnStep = function(callback) {
     playerModels.Player.find(function(err, data) {
         if (err) return console.log("failed to get players");
 
-        data.forEach(function(element, index, array) {
-            turnMechanics.takeTurn(element, 0);
-        });
-
-        callback();
+        callback(data.reduce(function(prevPlayers, currPlayer) {
+            prevPlayers.push(turnMechanics.takeTurn(currPlayer, 0));
+            return prevPlayers;
+        },[]));
     });
 }
 
@@ -58,7 +57,7 @@ this.takeTurn = function(player, numDoubles) {
         }       
 	});
 
-    console.log(player.name);
+    return player;
 }
 
 this.rollDice = function() {

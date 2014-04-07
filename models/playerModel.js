@@ -8,5 +8,3 @@ this.Player = db.mongoose.model('Player', {
     money: Number,
     properties: [{ id: db.mongoose.Schema.Types.ObjectId, percentage: Number }] //list of properties a player owns and how much of it they own
 });
-
-//will certainly also need a list of owned properties
