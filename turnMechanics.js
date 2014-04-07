@@ -55,15 +55,21 @@ this.takeTurn = function(player, numDoubles, callback) {
         console.log("player ", player.name , " landed on game area ", gameArea.name);
 
         turnMechanics.applyGameArea(player, gameArea, function(newPlayer) {
-            newPlayer.save(function(err) {
-	            if (err) console.log("error in saving the player"); 
-        
-                if (dice.isDouble) {
-                    console.log("player ", player.name, " rolled doubles!");
-                    turnMechanics.takeTurn(newPlayer, numDoubles + 1);
-                }       
-                callback(newPlayer);
-	        });            
+            var save = function() {
+                newPlayer.save(function(err) {
+	                if (err) console.log("error in saving the player"); 
+                    callback(newPlayer);
+	            }); 
+            };  
+
+            if (dice.isDouble) {
+                console.log("player ", player.name, " rolled doubles!");
+                turnMechanics.takeTurn(newPlayer, numDoubles + 1, function() {
+                    save();
+                });
+            }  else {
+                save();
+            }
         });
     });    
 }
