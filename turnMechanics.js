@@ -37,6 +37,7 @@ this.takeTurnStep = function(callback) {
 //responsible for taking one player's individual turn
 this.takeTurn = function(player, numDoubles, callback) {
     if (numDoubles == 3) {
+        //something like this, idk, haven't worked it out yet
         player = goToJail(player);
         player.save(function(err) {
 	        if (err) console.log("error in saving the player when going to jail");   
@@ -45,8 +46,11 @@ this.takeTurn = function(player, numDoubles, callback) {
     }
 
     var dice = turnMechanics.rollDice();
+    var newLocation = player.currentGameArea + dice.value;
 
-    player.currentGameArea = (player.currentGameArea + dice.value) % 40;
+    //when pass go, add $200
+    if (newLocation >= 40) player.money += 200;
+    player.currentGameArea = newLocation % 40;
 
     //find the new game area they landed on and apply it
     gameboardModel.GameArea.findOne({ 'index': player.currentGameArea }, function(err, gameArea) {
@@ -64,9 +68,7 @@ this.takeTurn = function(player, numDoubles, callback) {
 
             if (dice.isDouble) {
                 console.log("player ", player.name, " rolled doubles!");
-                turnMechanics.takeTurn(newPlayer, numDoubles + 1, function() {
-                    save();
-                });
+                turnMechanics.takeTurn(newPlayer, numDoubles + 1, callback);
             }  else {
                 save();
             }
@@ -82,7 +84,7 @@ this.rollDice = function() {
     return {
         value: x + y,
         isDouble: x == y
-        };
+    };
 }
 
 //puts a player into jail
