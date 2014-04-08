@@ -60,14 +60,12 @@ this.takeTurn = function(player, numDoubles, callback) {
         console.log(player.name , " landed on game area ", gameArea.name);
 
         turnMechanics.applyGameArea( player, gameArea, function ( newPlayer ) {
-            console.log("testing...");
             if ( dice.isDouble ) {
                 console.log( player.name, " rolled doubles!" );
                 turnMechanics.takeTurn( newPlayer, numDoubles + 1, callback );
             } else {
                 newPlayer.save( function ( err ) {
                     if ( err ) console.log( "error in saving the player" );
-                    console.log("test");
                     callback( newPlayer );
                 });
             }
