@@ -30,6 +30,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="public\javascripts\scripts.js" />
+    <Compile Include="chanceAndChestMechanics.js" />
     <Compile Include="turnMechanics.js" />
     <Compile Include="db.js" />
     <Compile Include="app.js" />

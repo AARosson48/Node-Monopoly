@@ -1,6 +1,7 @@
-var db = require('./db.js');
+//setup modules
 var playerModels = require('./models/playerModel.js');
 var gameboardModel = require('./models/gameboardModel.js');
+var chanceAndChestMechanics = require('./chanceAndChestMechanics.js');
 var turnMechanics = this;
 
 //reset the game, put all players back to $1500 on 0 area
@@ -56,7 +57,7 @@ this.takeTurn = function(player, numDoubles, callback) {
     gameboardModel.GameArea.findOne({ 'index': player.currentGameArea }, function(err, gameArea) {
         if (err) console.log("error in saving the player");
 
-        console.log("player ", player.name , " landed on game area ", gameArea.name);
+        console.log(player.name , " landed on game area ", gameArea.name);
 
         turnMechanics.applyGameArea(player, gameArea, function(newPlayer) {
             var save = function() {
@@ -67,7 +68,7 @@ this.takeTurn = function(player, numDoubles, callback) {
             };  
 
             if (dice.isDouble) {
-                console.log("player ", player.name, " rolled doubles!");
+                console.log(player.name, " rolled doubles!");
                 turnMechanics.takeTurn(newPlayer, numDoubles + 1, callback);
             }  else {
                 save();
@@ -95,16 +96,31 @@ this.goToJail = function(player) {
 
 //applys the effects of a game area to an individual player
 this.applyGameArea = function (player, gamearea, callback) {
-    //if it's a property and the player can afford it, auto buy it for now
-    if (gamearea.value && player.money >= gamearea.value) {
+    
+    if (gamearea.name == "Income Tax" ||
+        gamearea.name == "Electric Company" ||
+        gamearea.name == "Water Works" ||
+        gamearea.name == "Luxury Tax") {
+            player.money -= gamearea.value;
+            console.log(player.name + " landed on " + gamearea.name + " and paid " + gamearea.value + " in taxes.");
+    } else if (gamearea.value && player.money >= gamearea.value) {
+        //if it's a property and the player can afford it, auto buy it for now
         player.money -= gamearea.value;
         player.properties.push({
             id: gamearea.id,
             percentage: 1
         });
-        console.log("player ", player.name, " bought ", gamearea.name);
+        console.log(player.name, " bought ", gamearea.name);
+    } else if (gamearea.name == "Chance"){
+        chanceAndChestMechanics.drawChanceCard(player, function() {
+            //idk... whatever we do after they process that card...
+        });
+    } else if (gamearea.name == "Community Chest") {
+        chanceAndChestMechanics.drawCommChestCard(player, function() {
+            // same as above...    
+        });    
     } else {
-        console.log("player ", player.name, " did not land on a property");
+        console.log(player.name + " landed on " + gamearea.name + " and I don't know what to do");
     }
     callback(player);
 }
