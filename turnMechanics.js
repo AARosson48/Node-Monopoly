@@ -68,6 +68,7 @@ this.takeTurn = function(player, numDoubles, callback) {
                 newPlayer.save( function ( err ) {
                     if ( err ) console.log( "error in saving the player" );
                     console.log("soupy doopy");
+                    console.log("duuude");
                     callback( newPlayer );
                 });
             }
