@@ -59,19 +59,16 @@ this.takeTurn = function(player, numDoubles, callback) {
 
         console.log(player.name , " landed on game area ", gameArea.name);
 
-        turnMechanics.applyGameArea(player, gameArea, function(newPlayer) {
-            var save = function() {
-                newPlayer.save(function(err) {
-	                if (err) console.log("error in saving the player"); 
-                    callback(newPlayer);
-	            }); 
-            };  
+        turnMechanics.applyGameArea( player, gameArea, function ( newPlayer ) {
 
-            if (dice.isDouble) {
-                console.log(player.name, " rolled doubles!");
-                turnMechanics.takeTurn(newPlayer, numDoubles + 1, callback);
-            }  else {
-                save();
+            if ( dice.isDouble ) {
+                console.log( player.name, " rolled doubles!" );
+                turnMechanics.takeTurn( newPlayer, numDoubles + 1, callback );
+            } else {
+                newPlayer.save( function ( err ) {
+                    if ( err ) console.log( "error in saving the player" );
+                    callback( newPlayer );
+                });
             }
         });
     });    
