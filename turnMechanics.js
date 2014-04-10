@@ -47,26 +47,6 @@ this.takeTurn = function(player, numDoubles, callback) {
     var dice = turnMechanics.rollDice();
     var newLocation = player.currentGameArea + dice.value;
 
-    //when pass go, add $200
-    if (newLocation >= 40) player.money += 200;
-    player.currentGameArea = newLocation % 40;
-
-    //find the new game area they landed on and apply it
-    gameboardModel.GameArea.findOne({ 'index': player.currentGameArea }, function(err, gameArea) {
-        if (err) console.log("error in saving the player");
-
-        console.log(player.name , " landed on game area ", gameArea.name);
-
-        turnMechanics.applyGameArea( player, gameArea, function ( newPlayer ) {
-            if ( dice.isDouble ) {
-                console.log( player.name, " rolled doubles!" );
-                turnMechanics.takeTurn( newPlayer, numDoubles + 1, callback );
-            } else {
-                newPlayer.save( function ( err ) {
-                    if ( err ) console.log( "error in saving the player" );
-                    callback( newPlayer );
-                });
-            }
     if (player.inJail) {  //gotta love JS truthy statements :)
         //attempt to get them out of jail
         turnMechanics.surviveJail(player, dice, function(player) {
