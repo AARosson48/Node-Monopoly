@@ -7,7 +7,13 @@ var turnMechanics = this;
 //reset the game, put all players back to $1500 on 0 area
 this.resetGame = function(callback) {
     var resetCondition = {},  //no conditions, we want them all
-        resetUpdate = { $set: { currentGameArea: 0, money: 1500, properties: [] } },
+        resetUpdate = { $set: { 
+            currentGameArea: 0, 
+            money: 1500, 
+            properties: [], 
+            inJail: 0, 
+            getOutOfJailCardsNum: 0 } 
+        },
         resetOptions = { multi: true };
 
     playerModels.Player.update(resetCondition, resetUpdate, resetOptions, function(err, numAffected) {
@@ -37,40 +43,48 @@ this.takeTurnStep = function(callback) {
 
 //responsible for taking one player's individual turn
 this.takeTurn = function(player, numDoubles, callback) {
-    if (numDoubles == 3) {
-        //something like this, idk, haven't worked it out yet
-        player = goToJail(player);
-        player.save(function(err) {
-	        if (err) console.log("error in saving the player when going to jail");   
-	    });
-        return;
-    }
 
     var dice = turnMechanics.rollDice();
     var newLocation = player.currentGameArea + dice.value;
 
-    //when pass go, add $200
-    if (newLocation >= 40) player.money += 200;
-    player.currentGameArea = newLocation % 40;
-
-    //find the new game area they landed on and apply it
-    gameboardModel.GameArea.findOne({ 'index': player.currentGameArea }, function(err, gameArea) {
-        if (err) console.log("error in saving the player");
-
-        console.log(player.name , " landed on game area ", gameArea.name);
-
-        turnMechanics.applyGameArea( player, gameArea, function ( newPlayer ) {
-            if ( dice.isDouble ) {
-                console.log( player.name, " rolled doubles!" );
-                turnMechanics.takeTurn( newPlayer, numDoubles + 1, callback );
-            } else {
-                newPlayer.save( function ( err ) {
-                    if ( err ) console.log( "error in saving the player" );
-                    callback( newPlayer );
-                });
-            }
+    if (player.inJail) {  //gotta love JS truthy statements :)
+        //attempt to get them out of jail
+        turnMechanics.surviveJail(player, dice, function(player) {
+            player.save(function(err) {
+                if (err) console.log("error saving player after jail survival");
+                callback(player);    
+            });
         });
-    });    
+    } else {
+        if (numDoubles == 2 && dice.isDouble) {
+            //something like this, idk, haven't worked it out yet
+            turnMechanics.goToJail(player, function(player) {
+                player.save(function(err) {
+	                if (err) console.log("error in saving the player when going to jail");   
+	            });
+             });
+        } else {
+            //when pass go, add $200
+            if (newLocation >= 40) player.money += 200;
+            player.currentGameArea = newLocation % 40;
+
+            turnMechanics.getGameAreaFromIndex(player.currentGameArea, function(gameArea) {
+                //find the new game area they landed on and apply it
+                console.log(player.name , " landed on game area ", gameArea.name);
+                turnMechanics.applyGameArea( player, gameArea, function ( newPlayer ) {
+                    if ( dice.isDouble && !newPlayer.inJail) {
+                        console.log( player.name, " rolled doubles!" );
+                        turnMechanics.takeTurn( newPlayer, numDoubles + 1, callback );
+                    } else {
+                        newPlayer.save( function ( err ) {
+                            if ( err ) console.log( "error in saving the player" );
+                            callback( newPlayer );
+                        });
+                    }
+                });
+            });        
+        }
+    }  
 }
 
 
@@ -85,17 +99,52 @@ this.rollDice = function() {
 }
 
 //puts a player into jail
-this.goToJail = function(player) {
-    player.inJail = true;
-    return player;
+this.goToJail = function(player, callback) {
+    player.inJail = 1;  //we're on our 1st day in jail
+    callback(player);
+}
+
+//attempts to get a player out of jail
+this.surviveJail = function(player, dice, callback) {
+    var surviveJail = function() {
+       //you survive! move forward that many spaces
+        player.currentGameArea += dice.value;
+        turnMechanics.getGameAreaFromIndex(player.currentGameArea, function(gamearea) {
+            turnMechanics.applyGameArea(player, gamearea, function(newPlayer) {
+                newPlayer.save(function(err) {
+                    if (err) console.log( "error in saving the player" );
+                    callback(newPlayer);
+                });
+            });
+        });
+    };
+
+    if (dice.isDouble || player.inJail == 4) {
+        surviveJail();
+    } else if(player.getOutOfJailCardsNum > 0) {
+        player.getOutOfJailCardsNum--;
+        surviveJail();
+    } else {
+        //not today sucka, try again next week
+        player.inJail++;
+        callback(player);    
+    }
+    //we will need to think about another form of surviving jail if a player wants to pay $50.
+    //this will need to be asked in an email
+}
+
+//go get the game area from the db, given it's index
+this.getGameAreaFromIndex = function(gameIndex, callback){
+    gameboardModel.GameArea.findOne({ 'index': gameIndex }, function(err, gameArea) {
+        if (err) console.log("we couldn't find the gamearea with index:" + gameIndex);
+        callback(gameArea);
+    });
 }
 
 //applys the effects of a game area to an individual player
 this.applyGameArea = function (player, gamearea, callback) {
     
     if (gamearea.name == "Income Tax" ||
-        gamearea.name == "Electric Company" ||
-        gamearea.name == "Water Works" ||
         gamearea.name == "Luxury Tax") {
             player.money -= gamearea.value;
             console.log(player.name + " landed on " + gamearea.name + " and paid " + gamearea.value + " in taxes.");
@@ -114,12 +163,18 @@ this.applyGameArea = function (player, gamearea, callback) {
     } else if (gamearea.name == "Community Chest") {
         chanceAndChestMechanics.drawCommChestCard(player, function() {
             // same as above...    
-        });    
+        });  
+    } else if (gamearea.name == "Go To Jail") {
+        turnMechanics.goToJail(player, function(newPlayer) {
+            player = newPlayer;
+        });
     } else {
         console.log(player.name + " landed on " + gamearea.name + " and I don't know what to do");
     }
     callback(player);
 }
+
+
 
 
 //this could probably go into some utility module or something later on....
