@@ -107,8 +107,8 @@ this.goToJail = function(player, callback) {
 //attempts to get a player out of jail
 this.surviveJail = function(player, dice, callback) {
     var surviveJail = function() {
-       //you survive! move forward that many spaces
-        player.currentGameArea += dice.value;
+        //you survive! move forward that many spaces
+        player.currentGameArea = (player.currentGameArea + dice.value) % 40;
         turnMechanics.getGameAreaFromIndex(player.currentGameArea, function(gamearea) {
             turnMechanics.applyGameArea(player, gamearea, function(newPlayer) {
                 newPlayer.save(function(err) {
