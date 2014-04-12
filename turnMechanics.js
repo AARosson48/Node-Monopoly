@@ -101,6 +101,7 @@ this.rollDice = function() {
 //puts a player into jail
 this.goToJail = function(player, callback) {
     player.inJail = 1;  //we're on our 1st day in jail
+    player.currentGameArea = 10;  //go to "Just Visiting"
     callback(player);
 }
 
@@ -172,6 +173,10 @@ this.applyGameArea = function (player, gamearea, callback) {
         console.log(player.name + " landed on " + gamearea.name + " and I don't know what to do");
     }
     callback(player);
+}
+
+this.calculateAndApplyRentPay = function(player, gamearea, callback) {
+    //playerModel.Player.find({ 'properties': gameIndex }
 }
 
 

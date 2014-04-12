@@ -7,5 +7,6 @@ this.GameArea = db.mongoose.model('GameArea', {
     index: Number,
     image: String,
     color: String,
-    boardLocation: Number
+    boardLocation: Number,
+    baseRent: Number
 });
