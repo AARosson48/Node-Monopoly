@@ -2,6 +2,7 @@
 var playerModels = require('./models/playerModel.js');
 var gameboardModel = require('./models/gameboardModel.js');
 var chanceAndChestMechanics = require('./chanceAndChestMechanics.js');
+var rentCalculations = require('./rentCalculations.js');
 var turnMechanics = this;
 
 //reset the game, put all players back to $1500 on 0 area
@@ -31,6 +32,7 @@ this.takeTurnStep = function(callback) {
         var turnStepMutex = new Mutex(players.length, function() {
             callback(newPlayers);
         });
+
         
         players.forEach(function(player) {
             turnMechanics.takeTurn(player, 0, function(player) {
@@ -59,7 +61,7 @@ this.takeTurn = function(player, numDoubles, callback) {
         if (numDoubles == 2 && dice.isDouble) {
             //something like this, idk, haven't worked it out yet
             turnMechanics.goToJail(player, function(player) {
-                player.save(function(err) {
+                player.save(function(err) {   //this might not work, needs to be tested - may need to call some callback
 	                if (err) console.log("error in saving the player when going to jail");   
 	            });
              });
@@ -71,17 +73,29 @@ this.takeTurn = function(player, numDoubles, callback) {
             turnMechanics.getGameAreaFromIndex(player.currentGameArea, function(gameArea) {
                 //find the new game area they landed on and apply it
                 console.log(player.name , " landed on game area ", gameArea.name);
-                turnMechanics.applyGameArea( player, gameArea, function ( newPlayer ) {
-                    if ( dice.isDouble && !newPlayer.inJail) {
-                        console.log( player.name, " rolled doubles!" );
-                        turnMechanics.takeTurn( newPlayer, numDoubles + 1, callback );
-                    } else {
-                        newPlayer.save( function ( err ) {
-                            if ( err ) console.log( "error in saving the player" );
-                            callback( newPlayer );
-                        });
-                    }
-                });
+                
+                //we need to calculate all player's rent payout before we do any purchase math -- not sure how to do this quite yet...
+                //technically this will be a non-issue in final game, but we might want to do it right anyway...
+                
+                var applyGameArea = function() {
+                    turnMechanics.applyGameArea( player, gameArea, function ( newPlayer ) {
+                        if ( dice.isDouble && !newPlayer.inJail) {
+                            console.log( player.name, " rolled doubles!" );
+                            turnMechanics.takeTurn( newPlayer, numDoubles + 1, callback );
+                        } else {
+                            newPlayer.save( function ( err ) {
+                                if ( err ) console.log( "error in saving the player" );
+                                callback( newPlayer );
+                            });
+                        }
+                    });
+                }; 
+
+                if (gameArea.baseRent) {  //truthy statement, lol
+                    turnMechanics.calculateAndApplyRentPay(player, gameArea, function() {
+                        applyGameArea();
+                    });
+                } else applyGameArea();      
             });        
         }
     }  
@@ -151,9 +165,14 @@ this.applyGameArea = function (player, gamearea, callback) {
             console.log(player.name + " landed on " + gamearea.name + " and paid " + gamearea.value + " in taxes.");
     } else if (gamearea.value && player.money >= gamearea.value) {
         //if it's a property and the player can afford it, auto buy it for now
+
+        turnMechanics.calculateAndApplyRentPay(player, gamearea, function(stuff) {
+            console.log("we got stuff");    
+        });
+
         player.money -= gamearea.value;
         player.properties.push({
-            id: gamearea.id,
+            _id: gamearea.id,
             percentage: 1
         });
         console.log(player.name, " bought ", gamearea.name);
@@ -176,7 +195,39 @@ this.applyGameArea = function (player, gamearea, callback) {
 }
 
 this.calculateAndApplyRentPay = function(player, gamearea, callback) {
-    //playerModel.Player.find({ 'properties': gameIndex }
+
+    ///GAAHHH, it's something like this.... idk.....!!!
+
+    // playerModels.Player.find({ $and: [ {'properties' : {$not: {$size: 0}}}, { "properties.id" : gamearea.id } ] }, function(err, stuff) {
+    //        if (err) console.log("nope");
+    //        if (stuff.length) {
+    //            console.log("we got some");
+    //        }
+    //        callback();
+    //});
+    
+    // playerModels.Player.find({'properties' : {$not: {$size: 0}}}, {"properties": {$elemMatch: {id : gamearea.id}}}, function(err, stuff) {
+    //        if (err) console.log("nope");
+    //        if (stuff.length) {
+    //            console.log("we got some");
+    //        }
+    //        callback();
+    //});
+
+    //playerModels.Player.find({'properties' : {$not: {$size: 0}}}, function(err, stuff) {
+    //        if (err) console.log("nope");
+    //        if (stuff.length) {
+    //            console.log("we got some");
+    //        }
+    //        callback();
+    //});
+
+//    playerModels.Player.find({'properties' : {$not: {$size: 0}}}).find({ 'properties.id': gamearea.id }, function(err, players) {
+//        if (err) console.log("rent fetch went wrong");
+//        if (players.length) {
+//            console.log("we found an owner", players);
+//        }
+//    });
 }
 
 
