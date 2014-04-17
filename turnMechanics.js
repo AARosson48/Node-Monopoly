@@ -91,11 +91,18 @@ this.takeTurn = function(player, numDoubles, callback) {
                     });
                 }; 
 
-                if (gameArea.baseRent) {  //truthy statement, lol
-                    turnMechanics.calculateAndApplyRentPay(player, gameArea, function() {
-                        applyGameArea();
-                    });
-                } else applyGameArea();      
+                applyGameArea();
+
+                /////////////////////////////////////////////////////////////////////////////////////
+                //we will need to do something like this, but it all rent payments need to happen  //
+                //before purchase decisions are made.  Simon, I've leaving this to you, good luck. //
+                /////////////////////////////////////////////////////////////////////////////////////
+
+                //if (gameArea.baseRent) {  //truthy statement, lol
+                //    turnMechanics.calculateAndApplyRentPay(player, gameArea, function() {
+                //        applyGameArea();
+                //    });
+                //} else applyGameArea();      
             });        
         }
     }  
