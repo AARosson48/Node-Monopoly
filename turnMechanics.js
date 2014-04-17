@@ -94,7 +94,7 @@ this.takeTurn = function(player, numDoubles, callback) {
                 applyGameArea();
 
                 /////////////////////////////////////////////////////////////////////////////////////
-                //we will need to do something like this, but it all rent payments need to happen  //
+                //we will need to do something like this, but all rent payments need to happen     //
                 //before purchase decisions are made.  Simon, I've leaving this to you, good luck. //
                 /////////////////////////////////////////////////////////////////////////////////////
 
