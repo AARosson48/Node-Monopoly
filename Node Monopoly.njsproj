@@ -29,6 +29,7 @@
     <DebugSymbols>true</DebugSymbols>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="mail.js" />
     <Compile Include="public\javascripts\scripts.js" />
     <Compile Include="chanceAndChestMechanics.js" />
     <Compile Include="rentCalculations.js" />
@@ -39,6 +40,7 @@
     <Compile Include="models\gameboardModel.js" />
     <Compile Include="routes\index.js" />
     <Content Include="package.json" />
+    <Content Include="sensitiveInfo.config" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="models\" />

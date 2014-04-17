@@ -6,8 +6,8 @@
 var express = require('express');
 var http = require('http');
 var path = require('path');
-
 var app = module.exports = express();
+var mail = require('./mail');
 
 // all environments
 app.set('port', process.env.PORT || 3000);
@@ -29,12 +29,8 @@ if ('development' == app.get('env')) {
 
 //init all routes
 var routes = require('./routes');
-//var gameboard = require('./routes/gameboard');
-//var game = require("./routes/game");
-
-//var turnMechanics = require('./turnMechanics.js');
-
 
 http.createServer(app).listen(app.get('port'), function(){
+  //mail.sendEmail();  ///this works, please don't spam me
   console.log('Express server listening on port ' + app.get('port'));
 });
