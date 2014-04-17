@@ -18,7 +18,7 @@ app.use(express.json());
 app.use(express.urlencoded());
 app.use(express.methodOverride());
 app.use(app.router);
-app.use(require('less-middleware')(path.join(__dirname, 'public')));
+//app.use(require('less-middleware')(path.join(__dirname, 'public')));  //ntvs stuggles to compile the less-middleware, just use winless as needed or a patch is released
 app.use(express.static(path.join(__dirname, 'public')));
 
 // development only
