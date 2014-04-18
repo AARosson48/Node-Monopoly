@@ -30,6 +30,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="mail.js" />
+    <Compile Include="mutex.js" />
     <Compile Include="public\javascripts\scripts.js" />
     <Compile Include="chanceAndChestMechanics.js" />
     <Compile Include="rentCalculations.js" />
@@ -39,7 +40,10 @@
     <Compile Include="models\playerModel.js" />
     <Compile Include="models\gameboardModel.js" />
     <Compile Include="routes\index.js" />
+    <Content Include="basic.html" />
     <Content Include="package.json" />
+    <Content Include="public\stylesheets\emailStyles.less" />
+    <Content Include="public\stylesheets\ink.css" />
     <Content Include="sensitiveInfo.config" />
   </ItemGroup>
   <ItemGroup>

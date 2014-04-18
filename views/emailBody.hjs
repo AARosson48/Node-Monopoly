@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>{{ title }}</title>
+    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css">
+    <link href='http://fonts.googleapis.com/css?family=Yanone+Kaffeesatz:700' rel='stylesheet' type='text/css'>
+    <link rel='stylesheet' href='/stylesheets/style.css' />
+</head>
+<body>
+    <div id="gameBoard">
+        {{#gameAreas}}
+        <div class="game-area" data-index="{{index}}">
+            {{#color}}
+            <div class="color-rect" style="background-color:{{color}}"></div>
+            {{/color}}
+
+            <div class="area-name">{{name}}</div>
+            
+            {{#image}}
+            <img class="area-image" src="/images/{{image}}.png" />
+            {{/image}}
+
+            {{#value}}
+            <div class="area-value">${{value}}</div>
+            {{/value}}
+
+            {{#players}}
+                <div class="player">{{name}}:{{money}}</div>
+            {{/players}}
+
+        </div>
+        {{/gameAreas}}
+    </div>
+<!--     <div>Players:</div>
+    <ul>
+    {{#players}}
+        <li>Player {{name}} is currently on area: {{currentGameArea}} and owns 
+            {{#properties}}
+                <span>{{id}} </span>
+            {{/properties}}
+        </li>
+    {{/players}}
+    </ul> -->
+    <div class="btn btn-default" onclick="takeTurn();">Take Turn</div>
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js"></script>
+    <script src="//netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
+    <script src="/javascripts/scripts.js"></script>
+</body>
+</html>

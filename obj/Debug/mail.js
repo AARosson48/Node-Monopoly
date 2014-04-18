@@ -1,7 +1,7 @@
 ﻿var nodemailer = require( "nodemailer" );
 var fs = require( 'fs' );
 var hogan = require('hogan.js');
-//var hulk = require('hulk-hogan');
+var hulk = require('hulk-hogan');
 var mutex = require("./mutex.js");
 
 
@@ -20,7 +20,7 @@ var fileMutex = new mutex.Mutex(3, function() {
     });
             
     var testData = { ink: inkCSS };
-    var template = hogan.compile(emailLayout);
+    var template = hogan.compile(emailLayout, { asString: true });
 
     var stuff = template.render(testData);
 
@@ -57,7 +57,7 @@ fs.readFile( './public/stylesheets/ink.css', 'utf8', function ( err, data ) {
     fileMutex.decrement();
 });
 
-fs.readFile( './basic.html', 'utf8', function ( err, data ) {
+fs.readFile( './views/emailLayout.hjs', 'utf8', function ( err, data ) {
     emailLayout = data;
     fileMutex.decrement();
 });
