@@ -1,3 +1,4 @@
 *.suo
 sensitiveInfo.config
 node_modules/
+*.sln
