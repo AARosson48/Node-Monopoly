@@ -1,7 +1,7 @@
 ﻿var nodemailer = require( "nodemailer" );
 var fs = require( 'fs' );
 var hogan = require('hogan.js');
-var hulk = require('hulk-hogan');
+//var hulk = require('hulk-hogan');
 var mutex = require("./mutex.js");
 
 
@@ -20,7 +20,7 @@ var fileMutex = new mutex.Mutex(3, function() {
     });
             
     var testData = { ink: inkCSS };
-    var template = hogan.compile(emailLayout, { asString: true });
+    var template = hogan.compile(emailLayout);
 
     var stuff = template.render(testData);
 
@@ -34,12 +34,9 @@ var fileMutex = new mutex.Mutex(3, function() {
     }
 
     // send mail with defined transport object
-    smtpTransport.sendMail( mailOptions, function ( error, response ) {
-        if ( error ) {
-            console.log( error );
-        } else {
-            console.log( "Message sent: " + response.message );
-        }
+    smtpTransport.sendMail(mailOptions, function (err, response) {
+        if (err) console.log(error)
+        else console.log("Message sent: " + response.message);
 
         // if you don't want to use this transport object anymore, uncomment following line
         smtpTransport.close(); // shut down the connection pool, no more messages
@@ -57,7 +54,7 @@ fs.readFile( './public/stylesheets/ink.css', 'utf8', function ( err, data ) {
     fileMutex.decrement();
 });
 
-fs.readFile( './views/emailLayout.hjs', 'utf8', function ( err, data ) {
+fs.readFile( './basic.html', 'utf8', function ( err, data ) {
     emailLayout = data;
     fileMutex.decrement();
 });

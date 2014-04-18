@@ -31,6 +31,6 @@ if ('development' == app.get('env')) {
 var routes = require('./routes');
 
 http.createServer(app).listen(app.get('port'), function(){
-  mail.sendEmail();  ///this works, please don't spam me
+  //mail.sendEmail();  ///this works, please don't spam me
   console.log('Express server listening on port ' + app.get('port'));
 });

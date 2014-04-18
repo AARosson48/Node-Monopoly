@@ -7,7 +7,7 @@ var express = require('express');
 var http = require('http');
 var path = require('path');
 var app = module.exports = express();
-var mail = require('./mail');
+//var mail = require('./mail');
 
 // all environments
 app.set('port', process.env.PORT || 3000);

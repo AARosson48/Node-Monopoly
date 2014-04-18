@@ -1,8 +1,9 @@
 ﻿var nodemailer = require( "nodemailer" );
 var fs = require( 'fs' );
 var hogan = require('hogan.js');
-//var hulk = require('hulk-hogan');
 var mutex = require("./mutex.js");
+var juice = require("juice");
+
 
 
 var sensitiveInfo;
@@ -24,26 +25,29 @@ var fileMutex = new mutex.Mutex(3, function() {
 
     var stuff = template.render(testData);
 
-    // setup e-mail data with unicode symbols
-    var mailOptions = {
-        from: "Fred Foo ✔ <foo@blurdybloop.com>", // sender address
-        to: "mlwilson.mail@gmail.com", // list of receivers
-        subject: "Hello ✔", // Subject line
-        text: "Hello world ✔", // plaintext body
-        html: stuff // html body
-    }
+    juice.juiceContent(stuff, { url: "http://test" }, function(err, html) {
 
-    // send mail with defined transport object
-    smtpTransport.sendMail( mailOptions, function ( error, response ) {
-        if ( error ) {
-            console.log( error );
-        } else {
-            console.log( "Message sent: " + response.message );
+        // setup e-mail data with unicode symbols
+        var mailOptions = {
+            from: "Fred Foo ✔ <foo@blurdybloop.com>", // sender address
+            to: "mlwilson.mail@gmail.com", // list of receivers
+            subject: "Hello ✔", // Subject line
+            text: "Hello world ✔", // plaintext body
+            html: html // html body
         }
 
-        // if you don't want to use this transport object anymore, uncomment following line
-        smtpTransport.close(); // shut down the connection pool, no more messages
+        // send mail with defined transport object
+        smtpTransport.sendMail(mailOptions, function (err, response) {
+            if (err) console.log(error)
+            else console.log("Message sent: " + response.message);
+
+            // if you don't want to use this transport object anymore, uncomment following line
+            smtpTransport.close(); // shut down the connection pool, no more messages
+        });
+
     });
+
+    
     
 });
 
