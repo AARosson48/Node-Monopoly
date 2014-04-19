@@ -1,8 +1,8 @@
-var express = require('express');
-var http = require('http');
-var path = require('path');
-var app = module.exports = express();
-var mail = require('./mail');
+var express = require('express'),
+    http = require('http'),
+    path = require('path'),
+    mail = require('./mail'),
+    app = module.exports = express();
 
 // all environments
 app.set('port', process.env.PORT || 3000);

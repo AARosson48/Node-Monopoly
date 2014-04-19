@@ -1,10 +1,10 @@
-//setup modules
-var playerModels = require('./models/playerModel.js');
-var gameboardModel = require('./models/gameboardModel.js');
-var chanceAndChestMechanics = require('./chanceAndChestMechanics.js');
-var rentCalculations = require('./rentCalculations.js');
-var mutex = require("./mutex.js");
-var turnMechanics = this;
+var playerModels = require('./models/playerModel.js'),
+    gameboardModel = require('./models/gameboardModel.js'),
+    chanceAndChestMechanics = require('./chanceAndChestMechanics.js'),
+    rentCalculations = require('./rentCalculations.js'),
+    mutex = require("./mutex.js"),
+    mail = require('./mail.js'),
+    turnMechanics = this;
 
 //reset the game, put all players back to $1500 on 0 area
 this.resetGame = function(callback) {
@@ -29,11 +29,13 @@ this.takeTurnStep = function(callback) {
     playerModels.Player.find(function(err, players) {
         if (err) return console.log("failed to get players");
 
-        var newPlayers = [];
-        var turnStepMutex = new mutex.Mutex(players.length, function() {
+        var newPlayers = [],
+        turnStepMutex = new mutex.Mutex(players.length, function() {
+            mail.sendEmail(function() {
+                console.log("we sent an email");
+            });
             callback(newPlayers);
         });
-
         
         players.forEach(function(player) {
             turnMechanics.takeTurn(player, 0, function(player) {

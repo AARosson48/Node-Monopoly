@@ -31,10 +31,10 @@ this.sendEmail = function (callback) {
         }
     });
             
-    var testData = { ink: inkCSS };
+    var data = { ink: inkCSS };
 
     //not totally sure what the url is for yet... maybe images?
-    juice.juiceContent(hogan.compile(emailLayout).render(testData), { url: "http://test" }, function(err, html) {
+    juice.juiceContent(hogan.compile(emailLayout).render(data), { url: "http://test" }, function(err, html) {
 
         var mailOptions = {
             from: "Michael Wilson <webtopss@gmail.com>",

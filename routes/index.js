@@ -9,31 +9,29 @@ app.get('/', function(req, res) {
     var players;
     var gameboardMutexDecrement = function() {
         if (players && gameboard) {
-            turnMechanics.resetGame(function() {
-                res.render('gameBoard', { 
-  		            title: 'Node Monopoly',
-  		            gameAreas: gameboard.reduce(function(prevGameAreas, currGameArea) {
-                        prevGameAreas.push({
-                            name: currGameArea.name,
-                            index: currGameArea.index,
-                            value: currGameArea.value,
-                            image: currGameArea.image,
-                            color: currGameArea.color,
-                            players: players.reduce(function(prevPlayers, currPlayer) {
-                                //return all players currently on this current game area
-                                if (currPlayer.currentGameArea == currGameArea.index) {
-                                    prevPlayers.push({
-                                        name: currPlayer.name,
-                                        money: currPlayer.money    
-                                    });
-                                }
-                                return prevPlayers;
-                            },[])
-                        });
-                        return prevGameAreas;
-                    }, [])
-  	            });
-            });            
+            res.render('gameBoard', { 
+  		        title: 'Node Monopoly',
+  		        gameAreas: gameboard.reduce(function(prevGameAreas, currGameArea) {
+                    prevGameAreas.push({
+                        name: currGameArea.name,
+                        index: currGameArea.index,
+                        value: currGameArea.value,
+                        image: currGameArea.image,
+                        color: currGameArea.color,
+                        players: players.reduce(function(prevPlayers, currPlayer) {
+                            //return all players currently on this current game area
+                            if (currPlayer.currentGameArea == currGameArea.index) {
+                                prevPlayers.push({
+                                    name: currPlayer.name,
+                                    money: currPlayer.money    
+                                });
+                            }
+                            return prevPlayers;
+                        },[])
+                    });
+                    return prevGameAreas;
+                }, [])
+  	        });
         }
     };
 
@@ -61,6 +59,12 @@ app.get('/taketurn', function(req, res) {
     turnMechanics.takeTurnStep(function(data) {
         return res.send(data);
     })
+});
+
+app.get('/resetGame', function(req, res) {
+    turnMechanics.resetGame(function() {
+        
+        });
 });
 
 
