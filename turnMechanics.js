@@ -170,7 +170,7 @@ this.applyGameArea = function (player, gamearea, callback) {
     } else if (gamearea.value && player.money >= gamearea.value) {
         //if it's a property and the player can afford it, auto buy it for now
 
-        turnMechanics.calculateAndApplyRentPay(player, gamearea, function(stuff) {
+        rentCalculations.calculateAndApplyRentPay(player, gamearea, function(stuff) {
             console.log("we got stuff");    
         });
 

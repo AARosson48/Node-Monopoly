@@ -1,5 +1,6 @@
 ﻿var inkCSS,
-    emailLayout;
+    emailLayout,
+    emailBody;
 
 fs.readFile( './public/stylesheets/ink.css', 'utf8', function ( err, data ) {
     if (err) console.log("we couldnt' read the ink css");
@@ -11,6 +12,11 @@ fs.readFile( './views/emailLayout.hjs', 'utf8', function ( err, data ) {
     emailLayout = data;
 });
 
+fs.readFile( './views/emailBody.hjs', 'utf8', function ( err, data ) {
+    if (err) console.log("we couldnt' read the email body");
+    emailBody = data;
+});
+
 this.sendEmail = function (callback) {
     var smtpTransport = nodemailer.createTransport( "SMTP", {
         service: "Gmail",
@@ -20,7 +26,10 @@ this.sendEmail = function (callback) {
         }
     });
             
-    var data = { ink: inkCSS };
+    var data = { 
+        ink: inkCSS,
+        body: emailBody
+    };
 
     //not totally sure what the url is for yet... maybe images?
     juice.juiceContent(hogan.compile(emailLayout).render(data), { url: "http://test" }, function(err, html) {

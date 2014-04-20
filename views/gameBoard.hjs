@@ -31,17 +31,12 @@
         </div>
         {{/gameAreas}}
     </div>
-<!--     <div>Players:</div>
-    <ul>
-    {{#players}}
-        <li>Player {{name}} is currently on area: {{currentGameArea}} and owns 
-            {{#properties}}
-                <span>{{id}} </span>
-            {{/properties}}
-        </li>
-    {{/players}}
-    </ul> -->
+
+
     <div class="btn btn-default" onclick="takeTurn();">Take Turn</div>
+    <div class="btn btn-danger" onclick="resetGame();">Reset Game</div>
+
+
     <script src="http://ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js"></script>
     <script src="//netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
     <script src="/javascripts/scripts.js"></script>

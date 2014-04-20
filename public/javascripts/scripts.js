@@ -16,6 +16,7 @@ takeTurn = function() {
 
 resetGame = function() {
     $.post('/resetGame', {}, function() {
-        //move everybody back to go        
+        //move everybody back to go  
+        $("#gameBoard").find(".player").remove();      
     });
 }
