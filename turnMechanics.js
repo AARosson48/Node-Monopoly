@@ -1,11 +1,3 @@
-var playerModels = require('./models/playerModel.js'),
-    gameboardModel = require('./models/gameboardModel.js'),
-    chanceAndChestMechanics = require('./chanceAndChestMechanics.js'),
-    rentCalculations = require('./rentCalculations.js'),
-    mutex = require("./mutex.js"),
-    mail = require('./mail.js'),
-    turnMechanics = this;
-
 //reset the game, put all players back to $1500 on 0 area
 this.resetGame = function(callback) {
     var resetCondition = {},  //no conditions, we want them all
@@ -18,7 +10,7 @@ this.resetGame = function(callback) {
         },
         resetOptions = { multi: true };
 
-    playerModels.Player.update(resetCondition, resetUpdate, resetOptions, function(err, numAffected) {
+    playerModel.Player.update(resetCondition, resetUpdate, resetOptions, function(err, numAffected) {
         if (err) return console.log("failed to reset game");
         callback();
     });
@@ -26,14 +18,16 @@ this.resetGame = function(callback) {
 
 //responsible for taking one turn for all players
 this.takeTurnStep = function(callback) {
-    playerModels.Player.find(function(err, players) {
+    playerModel.Player.find(function(err, players) {
         if (err) return console.log("failed to get players");
 
         var newPlayers = [],
         turnStepMutex = new mutex.Mutex(players.length, function() {
-            mail.sendEmail(function() {
-                console.log("we sent an email");
-            });
+
+            //the following code works, please don't spam me
+            //mail.sendEmail(function() {
+            //    console.log("we sent an email");
+            //});
             callback(newPlayers);
         });
         
@@ -202,40 +196,4 @@ this.applyGameArea = function (player, gamearea, callback) {
         console.log(player.name + " landed on " + gamearea.name + " and I don't know what to do");
     }
     callback(player);
-}
-
-this.calculateAndApplyRentPay = function(player, gamearea, callback) {
-
-    ///GAAHHH, it's something like this.... idk.....!!!
-
-    // playerModels.Player.find({ $and: [ {'properties' : {$not: {$size: 0}}}, { "properties.id" : gamearea.id } ] }, function(err, stuff) {
-    //        if (err) console.log("nope");
-    //        if (stuff.length) {
-    //            console.log("we got some");
-    //        }
-    //        callback();
-    //});
-    
-    // playerModels.Player.find({'properties' : {$not: {$size: 0}}}, {"properties": {$elemMatch: {id : gamearea.id}}}, function(err, stuff) {
-    //        if (err) console.log("nope");
-    //        if (stuff.length) {
-    //            console.log("we got some");
-    //        }
-    //        callback();
-    //});
-
-    //playerModels.Player.find({'properties' : {$not: {$size: 0}}}, function(err, stuff) {
-    //        if (err) console.log("nope");
-    //        if (stuff.length) {
-    //            console.log("we got some");
-    //        }
-    //        callback();
-    //});
-
-//    playerModels.Player.find({'properties' : {$not: {$size: 0}}}).find({ 'properties.id': gamearea.id }, function(err, players) {
-//        if (err) console.log("rent fetch went wrong");
-//        if (players.length) {
-//            console.log("we found an owner", players);
-//        }
-//    });
 }

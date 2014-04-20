@@ -35,12 +35,10 @@
     <Compile Include="chanceAndChestMechanics.js" />
     <Compile Include="rentCalculations.js" />
     <Compile Include="turnMechanics.js" />
-    <Compile Include="db.js" />
     <Compile Include="app.js" />
     <Compile Include="models\playerModel.js" />
     <Compile Include="models\gameboardModel.js" />
     <Compile Include="routes\index.js" />
-    <Content Include="basic.html" />
     <Content Include="package.json" />
     <Content Include="public\stylesheets\emailStyles.less" />
     <Content Include="public\stylesheets\ink.css" />

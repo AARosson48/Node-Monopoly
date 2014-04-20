@@ -1,26 +1,15 @@
-﻿var nodemailer = require( "nodemailer" );
-var fs = require( 'fs' );
-var hogan = require('hogan.js');
-var juice = require("juice");
-
-var sensitiveInfo,
-    inkCSS,
+﻿var inkCSS,
     emailLayout;
 
-
-fs.readFile( './sensitiveInfo.config', 'utf8', function ( err, data ) {
-    sensitiveInfo = data;
-});
-
 fs.readFile( './public/stylesheets/ink.css', 'utf8', function ( err, data ) {
+    if (err) console.log("we couldnt' read the ink css");
     inkCSS = data;
 });
 
-fs.readFile( './emailLayout.html', 'utf8', function ( err, data ) {
+fs.readFile( './views/emailLayout.hjs', 'utf8', function ( err, data ) {
+    if (err) console.log("we couldnt' read the email Layout");
     emailLayout = data;
 });
-
-
 
 this.sendEmail = function (callback) {
     var smtpTransport = nodemailer.createTransport( "SMTP", {

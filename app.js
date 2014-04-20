@@ -1,8 +1,21 @@
-var express = require('express'),
-    http = require('http'),
-    path = require('path'),
-    mail = require('./mail'),
-    app = module.exports = express();
+//setup all modules
+express = require('express'),
+http = require('http'),
+path = require('path'),
+fs = require( 'fs' );
+nodemailer = require('nodemailer'),
+hogan = require('hogan.js'),
+mongoose = require('mongoose'),
+juice = require("juice"),
+mutex = require("./mutex.js"),
+mail = require('./mail'),
+gameboardModel = require("./models/gameboardModel"),
+playerModel = require("./models/playerModel"),
+turnMechanics = require("./turnMechanics"),
+chanceAndChestMechanics = require('./chanceAndChestMechanics.js'),
+rentCalculations = require('./rentCalculations.js');
+
+app = module.exports = express();
 
 // all environments
 app.set('port', process.env.PORT || 3000);
@@ -22,10 +35,20 @@ if ('development' == app.get('env')) {
 	app.use(express.logger('dev'));
 }
 
-//init all routes
-var routes = require('./routes');
+//setup mongo connection
+mongoose.connect("mongodb://localhost/MongoTest");
 
-http.createServer(app).listen(app.get('port'), function(){
-  //mail.sendEmail();  ///this works, please don't spam me
+//init all routes
+routes = require('./routes');  //actually inits the index. any more, and it will need to be initialized
+
+//consider getting the gamebaord now and cacheing
+
+//get sensitive info ready
+fs.readFile( './sensitiveInfo.config', 'utf8', function (err, data) {
+    if (err) console.log("we couldn't read our configs");
+    sensitiveInfo = data;
+});
+
+http.createServer(app).listen(app.get('port'), function() {
   console.log('Express server listening on port ' + app.get('port'));
 });
