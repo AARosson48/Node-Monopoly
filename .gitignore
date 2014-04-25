@@ -3,3 +3,4 @@ sensitiveInfo.config
 node_modules/
 *.sln
 Node Monopoly.v12.suo
+obj/

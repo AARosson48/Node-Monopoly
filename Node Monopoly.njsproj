@@ -30,6 +30,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="mail.js" />
+    <Compile Include="models\cardModel.js" />
     <Compile Include="mutex.js" />
     <Compile Include="public\javascripts\scripts.js" />
     <Compile Include="chanceAndChestMechanics.js" />

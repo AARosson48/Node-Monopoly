@@ -181,13 +181,9 @@ this.applyGameArea = function (player, gamearea, callback) {
         });
         console.log(player.name, " bought ", gamearea.name);
     } else if (gamearea.name == "Chance"){
-        chanceAndChestMechanics.drawChanceCard(player, function() {
-            //idk... whatever we do after they process that card...
-        });
+        player = chanceAndChestMechanics.applyCard(player);
     } else if (gamearea.name == "Community Chest") {
-        chanceAndChestMechanics.drawCommChestCard(player, function() {
-            // same as above...    
-        });  
+        player = chanceAndChestMechanics.applyCard(player);
     } else if (gamearea.name == "Go To Jail") {
         turnMechanics.goToJail(player, function(newPlayer) {
             player = newPlayer;

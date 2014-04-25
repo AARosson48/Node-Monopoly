@@ -11,6 +11,7 @@ mutex = require("./mutex.js"),
 mail = require('./mail'),
 gameboardModel = require("./models/gameboardModel"),
 playerModel = require("./models/playerModel"),
+cardModel = require("./models/cardModel"),
 turnMechanics = require("./turnMechanics"),
 chanceAndChestMechanics = require('./chanceAndChestMechanics.js'),
 rentCalculations = require('./rentCalculations.js');
