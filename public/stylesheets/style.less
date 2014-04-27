@@ -14,7 +14,7 @@ a {
     display: flex;
     flex-flow: row wrap;
     justify-content: space-between;
-    border: 6px solid #7485FF;
+    border: .54vw solid #7485FF;
     border-radius: 1%;
 
     & > .game-area {
@@ -25,7 +25,8 @@ a {
         justify-content: space-between;
         align-items: stretch;
         border: solid black;
-        border-width: 2px 1px;
+        //border-width: 2px 1px;
+        border-width: .26vw .13vw; //responsive border width  -- doesn't work on really small
         text-align: center;
         font-weight: bold;
         overflow: hidden;
@@ -40,42 +41,76 @@ a {
             background: #C2C2C2;
         }
 
+        & > .color-rect {
+            outline: .2vw solid black;
+            width: 100%;
+            height: 15%;
+        }
+
+        & > .area-name {
+            padding: 10% 2%;
+            word-wrap: break-word;
+            font-size: 1.5vw;
+            line-height: 1;
+        }
+
+        & > .area-value {
+            font-size: 2vw;
+        }
+
+        & > .area-image {
+            //max-width: none;
+            flex: 9 1 0;
+            width: 80%;
+            align-self: center;
+            margin: 10% 0;
+        }
+
         &:nth-child(-n+11) {
             flex-direction: column-reverse;
         }
 
         &:nth-child(n+12):nth-child(odd):nth-child(-n+29) {
             flex-direction: row;
-            border-width: 1px 2px;
+            //border-width: 1px 2px;
+            border-width: .13vw .26vw;
+            align-items: center;
 
             & > .color-rect {
                 width: 15%;
                 height: 100%;
             }
 
-            & > .area-name, & > .area-value, & > .area-image {
-                display: flex;
-                justify-content: center;
-                align-items: center;
+            & > .area-name, & > .area-value {
+                //display: flex;
+                //justify-content: center;
+                //align-items: center;
                 -moz-transform: rotate(270deg);
                 -webkit-transform: rotate(270deg); //.1 is for poor webkit antialiasing
                 max-width: 53%;
+            }
+            & > .area-image {
+                -moz-transform: rotate(180deg);
+                -webkit-transform: rotate(180deg); //.1 is for poor webkit antialiasing
+                margin-right: 10%;
             }
         }
 
         &:nth-child(n+12):nth-child(even):nth-child(-n+29) {
             flex-direction: row-reverse;
-            border-width: 1px 2px;
+            //border-width: 1px 2px;
+            border-width: .13vw .26vw;
+            align-items: center;
 
             & > .color-rect {
                 width: 15%;
                 height: 100%;
             }
 
-            & > .area-name, & > .area-value, & > .area-image {
-                display: flex;
-                justify-content: center;
-                align-items: center;
+            & > .area-name, & > .area-value {
+                //display: flex;
+                //justify-content: center;
+                //align-items: center;
                 -moz-transform: rotate(90deg);
                 -webkit-transform: rotate(90deg); //.1 is for poor webkit antialiasing
                 max-width: 53%;
@@ -103,32 +138,37 @@ a {
                 font-size: 2.1vw;
             }
         }
+        //just visting / jail
+        &:nth-child(30) {
+            flex-direction: column-reverse;
 
-        & > .color-rect {
-            outline: 2px solid black;
-            width: 100%;
-            height: 15%;
+            & .area-image {
+                width: 80%;
+                align-self: flex-end;
+                border-bottom: .2vw solid black;
+                border-left: .2vw solid black;
+                margin: 0;
+            }
+
+            & > .area-name {
+                padding: 4%;
+            }
         }
-
-        & > .area-name {
-            padding: 10% 2%;
-            word-wrap: break-word;
-            font-size: 1.5vw;
-            line-height: 1;
-        }
-
-        & > .area-value {
-            font-size: 2vw;
-        }
-
-        & > .area-image {
-            //max-width: none;
-            flex: 9 1 0;
+        //Go
+        &:nth-child(40) {
+            & .area-name {
+                text-transform: uppercase;
+                font-size: 6vw;
+                -webkit-text-stroke: .13vw black;
+                color: red;
+                -webkit-transform: rotate(-45deg);
+                -webkit-transform-origin: 7vw 6vw;
+            }
         }
     }
 }
 
 //temp
 .player {
-    background:lime;
+    background: lime;
 }
