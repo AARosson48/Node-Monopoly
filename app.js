@@ -42,7 +42,7 @@ mongoose.connect("mongodb://localhost/MongoTest");
 //init all routes
 routes = require('./routes');  //actually inits the index. any more, and it will need to be initialized
 
-//consider getting the gamebaord now and cacheing
+//consider getting the gamebaord now and caching
 
 //get sensitive info ready
 fs.readFile( './sensitiveInfo.config', 'utf8', function (err, data) {
