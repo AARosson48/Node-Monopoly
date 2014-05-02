@@ -52,6 +52,7 @@ app.get('/', function(req, res) {
 
 app.get('/taketurn', function(req, res) {
     turnMechanics.takeTurnStep(function(data) {
+        console.log("finishedStep");
         return res.send(data);
     })
 });

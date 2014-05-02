@@ -34,6 +34,8 @@ this.takeTurnStep = function ( callback ) {
     playerModel.Player.find( function ( err, players ) {
         if ( err ) return console.log( "failed to get players" );
 
+        var started2 = false;
+        var started3 = false;
         var postStepOnePlayers = [];
         var postStepTwoPlayers = [];
         //var turnStepMutex = new mutex.Mutex( players.length, function () {
@@ -47,30 +49,44 @@ this.takeTurnStep = function ( callback ) {
 
         // TODO Soupy: Buy properties... which will have to changed once emailed.
         var thirdTurnStepMutex = new mutex.Mutex( players.length, function () {
+            console.log( "STEP 3" );
+            started3 = true;
             justThePlayers = [];
+            var lockMongo = false;
             postStepTwoPlayers.forEach( function ( playerTuple ) {
                 var player = playerTuple[0];
                 justThePlayers.push( player );
                 var gameareas = playerTuple[1];
-                var buyAllMutex = new mutex.Mutex( gameareas.length, function () {
-                    player.save( function ( err ) {
-                        if ( err ) console.log( "error saving player after moving" );
-                    });
-                });
                 gameareas.forEach( function ( gamearea ) {
-                    turnMechanics.applyGameAreaBuy( player, gamearea, function ( property, cost ) {
-                        if ( property != undefined ) {
+                    var propTuple = turnMechanics.applyGameAreaBuy( player, gamearea );
+                    var property = propTuple.prop;
+                    var cost = propTuple.money;
+                    if ( property != undefined ) {
+                        var alreadyAdded = false;
+                        player.properties.forEach( function ( prop ) {
+                            if ( prop.id == property._id ) {
+                                prop.percentage += property.percentage;
+                                alreadyAdded = true;
+                            }
+                        }, [] );
+                        if ( !alreadyAdded ) {
                             player.properties.push( property );
-                            player.money -= cost;
                         }
-                        buyAllMutex.decrement();
-                    });
+                        player.money -= cost;
+                    }
                 }, [] );
 
+                player.save( function ( err ) {
+                    if ( err ) {
+                        console.log( "error saving player during STEP 3" );
+                    }
+                });
             }, [] );
             callback( justThePlayers );
         });
         var secondTurnStepMutex = new mutex.Mutex( players.length, function () {
+            console.log( "STEP 2" );
+            started2 = true;
             playerMoneyDifference = {}; // Dictionary to playerID and money gain/loss.
 
             // Get the payments.
@@ -101,19 +117,31 @@ this.takeTurnStep = function ( callback ) {
                     player.money += playerMoneyDifference[player.id];
                 }
                 player.save( function ( err ) {
-                    if ( err ) console.log( "error saving player after moving" );
+                    if ( err ) console.log( "error saving player during STEP 2" );
                     postStepTwoPlayers.push( [player, gameareas, messages] );
+                    if ( started3 ) {
+                        console.log( "improper start of step 3" );
+                    }
                     thirdTurnStepMutex.decrement();
                 });
             }, [] );
         });
 
+        var secondMutexCount = 0;
         // 1 PLAYERS MOVE
+        console.log( "STEP 1" );
         players.forEach( function ( player ) {
             turnMechanics.movePlayer( player, 0, [], [], function ( playerRef, gameareas, messages ) {
                 playerRef.save( function ( err ) {
-                    if ( err ) console.log( "error saving player after moving" );
+                    if ( err ) console.log( "error saving player during STEP 1" );
                     postStepOnePlayers.push( [playerRef, gameareas, messages] );
+                    if ( started2 ) {
+                        console.log( "improper start of step 2" );
+                    }
+                    secondMutexCount++;
+                    if ( secondMutexCount % 200 == 0 || secondMutexCount > 790 ) {
+                        console.log( "saved " + secondMutexCount + " in step 1" );
+                    }
                     secondTurnStepMutex.decrement();
                 });
             });
@@ -148,7 +176,7 @@ this.movePlayer = function ( player, numDoubles, gameareas, messages, callback )
 
         turnMechanics.getGameAreaFromIndex( player.currentGameArea, function ( gameArea ) {
             //find the new game area they landed on and apply it
-            console.log( player.name, " landed on game area ", gameArea.name );
+            //console.log( player.name, " landed on game area ", gameArea.name );
             gameareas.push( gameArea );
 
             var playerAndMessage = turnMechanics.applyGameAreaMove( player, gameArea );
@@ -156,17 +184,13 @@ this.movePlayer = function ( player, numDoubles, gameareas, messages, callback )
             messages.push( playerAndMessage[1] );
 
             if ( dice.isDouble && !player.inJail ) {
-                console.log( player.name, " rolled doubles!" );
+                //console.log( player.name, " rolled doubles!" );
                 turnMechanics.movePlayer( player, numDoubles + 1, gameareas, messages, callback );
             } else {
                 callback( player, gameareas, messages );
             }
         });
     }
-
-}
-
-this.payPlayers = function ( player, numDoubles, callback ) {
 
 }
 
@@ -219,22 +243,22 @@ this.getGameAreaFromIndex = function ( gameIndex, callback ) {
 
 // Applies the effects of a game area to an individual player.
 // Will have to tie into email because user will affect what happens.
-this.applyGameAreaMove = function ( player, gamearea, callback ) {
+this.applyGameAreaMove = function ( player, gamearea ) {
 
     var message = "";
     if ( gamearea.name == "Income Tax" ||
         gamearea.name == "Luxury Tax" ) {
         player.money -= gamearea.value;
         message = "You've landed on Luxury Tax and have paid $" + gamearea.value + " in taxes";
-        console.log( player.name + " landed on " + gamearea.name + " and paid " + gamearea.value + " in taxes." );
+        //console.log( player.name + " landed on " + gamearea.name + " and paid " + gamearea.value + " in taxes." );
     } else if ( gamearea.name == "Chance" ) {
-        chanceAndChestMechanics.drawChanceCard( player, function () {
-            //idk... whatever we do after they process that card...
-        });
+        //chanceAndChestMechanics.drawChanceCard( player, function () {
+        //idk... whatever we do after they process that card...
+        //});
     } else if ( gamearea.name == "Community Chest" ) {
-        chanceAndChestMechanics.drawCommChestCard( player, function () {
-            // same as above...    
-        });
+        //chanceAndChestMechanics.drawCommChestCard( player, function () {
+        // same as above...    
+        //});
     } else if ( gamearea.name == "Go To Jail" ) {
         message = "You've landed on 'Go To Jail' and were immediately arrented for piggy backing someone into the building.";
         player = turnMechanics.goToJail( player );
@@ -244,38 +268,48 @@ this.applyGameAreaMove = function ( player, gamearea, callback ) {
 
     } else {
         message = "You've helped us find a critical error :D";
-        console.log( player.name + " landed on " + gamearea.name + " and I don't know what to do" );
+        //console.log( player.name + " landed on " + gamearea.name + " and I don't know what to do" );
     }
     return [player, message];
 }
-this.applyGameAreaBuy = function ( player, gamearea, callback ) {
+this.applyGameAreaBuy = function ( player, gamearea ) {
     if ( gamearea.baseRent && player.money >= gamearea.value ) {
         //if it's a property and the player can afford it, auto buy it for now
 
         // Checks if user wants to buy the area.
         var testUserAction = Math.random();
         if ( testUserAction < .333 ) {
-            callback( {
-                _id: gamearea.id,
-                percentage: 1
-            }, gamearea.value );
-            console.log( player.name, " bought ", gamearea.name );
+            return {
+                prop: {
+                    _id: gamearea.id,
+                    percentage: 1
+                },
+                money: gamearea.value
+            };
+            //console.log( player.name, " bought ", gamearea.name );
         } else if ( testUserAction < .667 ) {
-            callback( {
-                _id: gamearea.id,
-                percentage: 2
-            }, gamearea.value * 2 );
-            console.log( player.name, " bought 2 ", gamearea.name );
+            return {
+                prop: {
+                    _id: gamearea.id,
+                    percentage: 2
+                },
+                money: gamearea.value * 2
+            };
+            //console.log( player.name, " bought 2 ", gamearea.name );
         } else {
-            callback( {
-                _id: gamearea.id,
-                percentage: 3
-            }, gamearea.value * 3 );
-            console.log( player.name, " bought 3 ", gamearea.name );
+            return {
+                prop: {
+                    _id: gamearea.id,
+                    percentage: 3
+                },
+                money: gamearea.value * 3
+            };
+            //console.log( player.name, " bought 3 ", gamearea.name );
         }
 
-    } else {
-        console.log( player.name + " landed on " + gamearea.name + " and I don't know what to do" );
     }
-    callback( undefined, undefined );
+    return {
+        prop: undefined,
+        money: 0
+    };
 }

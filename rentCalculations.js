@@ -13,7 +13,7 @@ this.calculateAndApplyRentPay = function ( player, gamearea, callback ) {
 
     playerModel.Player.find( { $and: [{ properties: { $not: { $size: 0 } } }, { properties: { $elemMatch: { _id: gamearea.id } } }] }, function ( err, players ) {
         if ( err ) {
-            console.log( "nope" );
+            console.log( "error getting renters" );
             return;
         }
         var playerMoneyDifference = {};
@@ -33,12 +33,13 @@ this.calculateAndApplyRentPay = function ( player, gamearea, callback ) {
             for ( var i = 0; i < players.length; i++ ) {
                 var curPlayer = players[i];
                 if ( curPlayer.id != player.id ) {
-                    partialToPayUp = getProperty( curPlayer, gamearea.id ).percentage * stockAmount;
+                    var prop = getProperty( curPlayer, gamearea.id );
+                    partialToPayUp = (((prop.percentage-1)*1.2) + 1) * stockAmount;
                     totalToPayUp += partialToPayUp;
                     player.money -= partialToPayUp;
 
                     playerMoneyDifference[curPlayer.id] = partialToPayUp;
-                    console.log( player.name + " paid " + partialToPayUp + " to " + curPlayer.name );
+                    //console.log( player.name + " paid " + partialToPayUp + " to " + curPlayer.name );
                 }
             }
         }
