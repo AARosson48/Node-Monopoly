@@ -1,25 +1,45 @@
 var cards;
 
+//get the cards from the database
 cardModel.Card.find(function(err, data) {
     if (err) return console.log(err);
     cards = data;   
 });
 
-
+//draw a card and apply it to the player
 this.applyCard = function(player) {
-    //var cardNumber = Math.floor(Math.random() * 16);
+    
+    
     if (cards) {
-        var card = cards[0];     //temp code for now
-        return chanceAndChestMechanics.cardFuncs[card.type](player, card.value);
+        //var card = cards[0];     //temp code for now
+        var cardNumber = Math.floor(Math.random() * 16);
+        var card = cards[cardNumber];
+        console.log(card.description);      //might as well throw the description to the console for now...
+        return chanceAndChestMechanics.cardFuncs[card.type](player, card);
     }
 }
 
+//types of functions a card can execute based on type...
 this.cardFuncs = {
-    "finan" : function(player, cardValue) {
-        player.money += cardValue;
+    "finan" : function(player, card) {
+        player.money += card.moneyValue;
         return player;
     },
-    "moveToX" : function() {
+    "moveToX" : function(player, card) {
+    },
+    "moveXSpaces" : function(player, card) {
+    },
+    "goToJail" : function (player, card) {
+        player.inJail++;
+        apply.currentGameArea
+    },
+    "getOutOfJail" : function (player, card) {
+        player.getOutOfJailCardsNum++;
+    },
+    "moveToXCollectY": function (player, card) {
+        player.currentGameArea = card.cardMoveValue;
+        player.money += card.cardMoneyValue;
+        apply.currentGameArea;
     }
 }
 
