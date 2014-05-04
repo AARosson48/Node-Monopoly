@@ -25,20 +25,23 @@ this.cardFuncs = {
         player.money += card.moneyValue;
         return player;
     },
-    "moveToX" : function(player, card) {
+    "moveToX": function (player, card) {
+        player.currentGameArea = card.moveValue;
+        apply.currentGameArea;
     },
-    "moveXSpaces" : function(player, card) {
+    "moveXSpaces": function (player, card) {
+        player.currentGameArea += card.moveValue;
     },
     "goToJail" : function (player, card) {
         player.inJail++;
-        apply.currentGameArea
+        apply.currentGameArea;
     },
     "getOutOfJail" : function (player, card) {
         player.getOutOfJailCardsNum++;
     },
     "moveToXCollectY": function (player, card) {
-        player.currentGameArea = card.cardMoveValue;
-        player.money += card.cardMoneyValue;
+        player.currentGameArea = card.moveValue;
+        player.money += card.moneyValue;
         apply.currentGameArea;
     }
 }
