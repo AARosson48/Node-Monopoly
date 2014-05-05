@@ -29,6 +29,7 @@
     <DebugSymbols>true</DebugSymbols>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="gameAreaManager.js" />
     <Compile Include="mail.js" />
     <Compile Include="models\cardModel.js" />
     <Compile Include="mutex.js" />

@@ -13,6 +13,15 @@ takeTurn = function() {
         });
     });
 }
+takeTurns = function() {
+    $.get('/taketurns', {}, function(data) {
+        //do something... repaint, i guess
+        $("#gameBoard").find(".player").remove();
+        data.forEach(function(elem) {
+            $(".game-area[data-index=" + elem.currentGameArea +"]").append("<div class='player'>"+ elem.name + ":" + elem.money + "</div>");
+        });
+    });
+}
 
 resetGame = function() {
     $.post('/resetGame', {}, function() {
