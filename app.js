@@ -16,6 +16,7 @@ turnMechanics = require( "./turnMechanics" ),
 chanceAndChestMechanics = require( './chanceAndChestMechanics.js' ),
 rentCalculations = require( './rentCalculations.js' );
 gameAreaManager = require( './gameAreaManager.js' );
+testing = require( './testing.js' );
 
 app = module.exports = express();
 

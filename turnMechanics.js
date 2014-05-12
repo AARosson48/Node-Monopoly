@@ -29,16 +29,15 @@ var BUY_STOCK = 2;
 // b) callback takes a list of gameareas landed on.
 // c) callback also takes a list of messages.
 // 2) All players pay other players.
-// 3) All players buy stock.
+// 3) All players get emailed about what actions they can perform
+// a) All players will also get saved (before replying to email). *NOT DONE YET*
+// b) All players buy stock and/or get out of jail, perform any other action specified in email.
 this.takeTurnStep = function ( callback ) {
     playerModel.Player.find( function ( err, players ) {
         if ( err ) return console.log( "failed to get players" );
 
-        var started2 = false;
-        var started3 = false;
         var postStepOnePlayers = [];
         var postStepTwoPlayers = [];
-        var secondMutexCount = 0;
         var justThePlayers = [];
         var gameAreaToPlayerMap = gameAreaManager.getGameAreaToPlayerMap( players );
         //var turnStepMutex = new mutex.Mutex( players.length, function () {
@@ -56,28 +55,33 @@ this.takeTurnStep = function ( callback ) {
         // TODO Soupy: Buy properties... which will have to changed once emailed.
         var thirdTurnStepMutex = new mutex.Mutex( players.length, function () {
             console.log( "STEP 3" );
-            started3 = true;
-            var lockMongo = false;
             postStepTwoPlayers.forEach( function ( playerTuple ) {
                 var player = playerTuple[0];
                 justThePlayers.push( player );
                 var gameareas = playerTuple[1];
+
+                if ( player.name == "Entry 0" ) {
+                    var messages = playerTuple[2];
+                    var body = "";
+                    messages.forEach( function ( mess ) {
+                        body += mess + "<br/>";
+                    }, [] );
+                    body += "<br/>You've landed on:<br/>";
+                    gameareas.forEach( function ( area ) {
+                        body += area.name + "<br/>";
+                    }, [] );
+                    mail.sendEmail( body, function () {
+                        console.log( "we sent an email" );
+                    });
+                }
+
+                // This will have to change once we actually get emails to work.
                 gameareas.forEach( function ( gamearea ) {
                     var propTuple = turnMechanics.applyGameAreaBuy( player, gamearea );
                     var property = propTuple.prop;
                     var cost = propTuple.money;
                     if ( property != undefined ) {
-                        var alreadyAdded = false;
-                        player.properties.forEach( function ( prop ) {
-                            if ( prop.id == property._id ) {
-                                prop.percentage += property.percentage;
-                                alreadyAdded = true;
-                            }
-                        }, [] );
-                        if ( !alreadyAdded ) {
-                            player.properties.push( property );
-                        }
-                        player.money -= cost;
+                        player = gameAreaManager.PurchaseProperty(player, property, cost);
                     }
                 }, [] );
 
@@ -97,13 +101,13 @@ this.takeTurnStep = function ( callback ) {
         }, [] );
 
         console.log( "STEP 2" );
-        started2 = true;
         playerMoneyDifference = {}; // Dictionary to playerID and money gain/loss.
 
         // Get the payments.
         postStepOnePlayers.forEach( function ( playerTuple ) {
             var player = playerTuple[0];
             var gameareas = playerTuple[1];
+            var messages = playerTuple[2];
             gameareas.forEach( function ( gamearea ) {
 
                 playerMoneyDifferenceStep = rentCalculations.calculateAndApplyRentPay( player, gamearea, gameAreaToPlayerMap );
@@ -116,17 +120,6 @@ this.takeTurnStep = function ( callback ) {
                         playerMoneyDifference[playerId] += amountForCurrentPlayer;
                     }
                 }, [] );
-
-                ////rentCalculations.calculateAndApplyRentPay( player, gamearea, function ( playerMoneyDifferenceStep ) {
-                //    Object.keys( playerMoneyDifferenceStep ).forEach( function ( playerId ) {
-                //        var amountForCurrentPlayer = playerMoneyDifferenceStep[playerId];
-                //        if ( playerMoneyDifference[playerId] == undefined ) {
-                //            playerMoneyDifference[playerId] = amountForCurrentPlayer;
-                //        } else {
-                //            playerMoneyDifference[playerId] += amountForCurrentPlayer;
-                //        }
-                //    }, [] );
-                //});
             }, [] );
         }, [] );
 
@@ -136,14 +129,16 @@ this.takeTurnStep = function ( callback ) {
             var gameareas = playerTuple[1];
             var messages = playerTuple[2];
             if ( playerMoneyDifference[player.id] != undefined ) {
-                if(playerMoneyDifference[player.id] > 500)
+                if ( playerMoneyDifference[player.id] > 500 )
                     console.log( player.name + " recieved '$" + playerMoneyDifference[player.id] + "'" );
                 player.money += playerMoneyDifference[player.id];
+                if ( playerMoneyDifference[player.id] < 0 ) {
+                    messages.push( "you've lost $" + playerMoneyDifference[player.id] );
+                } else if ( playerMoneyDifference[player.id] > 0 ) {
+                    messages.push( "you've gained $" + playerMoneyDifference[player.id] );
+                }
             }
             postStepTwoPlayers.push( [player, gameareas, messages] );
-            if ( started3 ) {
-                console.log( "improper start of step 3" );
-            }
             thirdTurnStepMutex.decrement();
         }, [] );
 

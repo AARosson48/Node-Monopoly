@@ -36,6 +36,7 @@
     <Compile Include="public\javascripts\scripts.js" />
     <Compile Include="chanceAndChestMechanics.js" />
     <Compile Include="rentCalculations.js" />
+    <Compile Include="testing.js" />
     <Compile Include="turnMechanics.js" />
     <Compile Include="app.js" />
     <Compile Include="models\playerModel.js" />
