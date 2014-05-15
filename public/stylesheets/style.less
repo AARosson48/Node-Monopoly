@@ -66,11 +66,11 @@ a {
             margin: 10% 0;
         }
 
-        &:nth-child(-n+11) {
+        &:nth-of-type(-n+11) {
             flex-direction: column-reverse;
         }
 
-        &:nth-child(n+12):nth-child(odd):nth-child(-n+29) {
+        &:nth-of-type(n+12):nth-of-type(odd):nth-of-type(-n+29) {
             flex-direction: row;
             //border-width: 1px 2px;
             border-width: .13vw .26vw;
@@ -96,7 +96,7 @@ a {
             }
         }
 
-        &:nth-child(n+12):nth-child(even):nth-child(-n+29) {
+        &:nth-of-type(n+12):nth-of-type(even):nth-of-type(-n+29) {
             flex-direction: row-reverse;
             //border-width: 1px 2px;
             border-width: .13vw .26vw;
@@ -117,29 +117,51 @@ a {
             }
         }
 
-        &:nth-child(-n+11), &:nth-child(n+31) {
+        &:nth-of-type(-n+11), &:nth-of-type(n+31) {
             height: 15%;
             width: 7.77776%;
         }
 
 
-        &:nth-child(n+12):nth-child(odd):nth-child(-n+30) {
+        &:nth-of-type(n+12):nth-of-type(odd):nth-of-type(-n+30) {
             margin-left: 56%;
         }
 
-        &:nth-child(1), &:nth-child(11), &:nth-child(30), &:nth-child(40) {
+        &:nth-of-type(1), &:nth-of-type(11), &:nth-of-type(30), &:nth-of-type(40) {
             width: 15%;
             height: 15%;
         }
+
+        //Free parking & Go To Jail
+        &:nth-of-type(1), &:nth-of-type(11) {
+            & .area-image {
+                margin: 0;
+            }
+        }
+
+        //B % O
+        &:nth-of-type(6) {
+            & .area-image {
+                margin: 20% 0;
+            }
+        }
+
+        //left chest
+        &:nth-of-type(16) {
+            & .area-image {
+                margin: 0 5%;
+            }
+        }
+
         //income tax
-        &:nth-child(36) {
+        &:nth-of-type(36) {
             & .area-name {
                 text-transform: uppercase;
                 font-size: 2.1vw;
             }
         }
         //just visting / jail
-        &:nth-child(30) {
+        &:nth-of-type(30) {
             flex-direction: column-reverse;
 
             & .area-image {
@@ -155,7 +177,7 @@ a {
             }
         }
         //Go
-        &:nth-child(40) {
+        &:nth-of-type(40) {
             & .area-name {
                 text-transform: uppercase;
                 font-size: 6vw;

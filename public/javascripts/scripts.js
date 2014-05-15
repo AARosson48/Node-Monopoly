@@ -29,3 +29,20 @@ resetGame = function() {
         $("#gameBoard").find(".player").remove();      
     });
 }
+
+$('.game-area').slice(0,11).popover({
+    content : "STATISTICS!",
+    placement : "bottom"
+})
+$('.game-area:odd').slice(5,14).popover({
+    content : "STATISTICS!",
+    placement: "right"
+})
+$('.game-area:even').slice(6, 15).popover({
+    content : "STATISTICS!",
+    placement: "left"
+})
+$('.game-area').slice(29, 41).popover({
+    content : "STATISTICS!",
+    placement: "top"
+})

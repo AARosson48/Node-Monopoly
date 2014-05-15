@@ -9,13 +9,13 @@
 <body>
     <div id="gameBoard">
         {{#gameAreas}}
-        <div class="game-area" data-index="{{index}}">
+        <span class="game-area" data-index="{{index}}" title="{{area-name}}">
             {{#color}}
             <div class="color-rect" style="background-color:{{color}}"></div>
             {{/color}}
 
             <div class="area-name">{{name}}</div>
-            
+
             {{#image}}
             <img class="area-image" src="/images/{{image}}.png" />
             {{/image}}
@@ -25,10 +25,10 @@
             {{/value}}
 
             {{#players}}
-                <div class="player">{{name}}:{{money}}</div>
+            <div class="player">{{name}}:{{money}}</div>
             {{/players}}
 
-        </div>
+        </span>
         {{/gameAreas}}
     </div>
 
